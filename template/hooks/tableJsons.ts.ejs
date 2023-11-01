@@ -1,0 +1,13 @@
+import { <%= atPageModel %>, <%= atQueryModel %> } from '@/apiType/production/result';
+import { E_Fixed, E_Type, T_ComparisonData, T_SearchFormData } from '@/mixin/table';
+
+export default () => {
+	const tableColumn = reactive<T_ComparisonData<<%= atPageModel %>>>(<%- tableColumn %>);
+
+	const searchParam = reactive<T_SearchFormData<<%= atQueryModel %>>>(<%- searchParam %>);
+
+	return {
+		searchParam,
+		tableColumn,
+	};
+};

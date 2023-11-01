@@ -1,0 +1,10 @@
+import {<%= atPageModel %>, <%= atQueryModel %> } from '@/apiType/production/result';
+import { I_TableHookTableExplate } from '@/mixin/table';
+
+export declare interface I_SearchSelectData { }; 
+ 
+export enum E_PermissionItems {
+	<% permissionArr.forEach(function(item, index) { %><%= item.key %>=<%= item.value %><% if(index < permissionArr.length - 1) { %>,<% } %><% }); %>
+} 
+		
+export declare type T_JlgTableRef = Ref<I_TableHookTableExplate<<%= atPageModel %>,<%= atQueryModel %>> | null>;

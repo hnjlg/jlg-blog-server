@@ -1,0 +1,78 @@
+import ElMessage from '@/lib/message';
+import { E_PermissionItems, T_JlgTableRef } from '../type';
+import { <%= atPageModel %>, <%= atQueryModel %> } from '@/apiType/production/result';
+import { T_InternalInstance } from '@/mixin/hookpage';
+import { footerSum, openModal } from '@/lib/common';
+import modalModules from '@/lib/modalConfig';
+import { VxeTableEvents, VxeTablePropTypes } from 'vxe-table';
+import { I_SubRemoteTableData, I_TableHookReturn, T_ComparisonData, T_SearchFormData } from '@/mixin/table';
+
+export default (
+	permissionItems: Ref<number>,
+	tableExplate: T_JlgTableRef,
+	internalInstance: T_InternalInstance,
+	initTableData: (reqData: <%= atQueryModel %>) => void,
+	tableReqBody: <%= atQueryModel %>,
+	subRemoteTableData: I_TableHookReturn<<%= atPageModel %>, <%= atQueryModel %>>['subRemoteTableData'],
+	searchParam: T_SearchFormData<<%= atQueryModel %>>,
+	tableColumn: T_ComparisonData<<%= atPageModel %>>
+) => {
+	const RefreshTableData = () => {
+		initTableData(tableReqBody);
+	};
+	
+	const useCurrentParam = (event: I_SubRemoteTableData<T_SearchFormData<<%= atQueryModel %>>, T_ComparisonData<<%= atPageModel %>>>) => {
+		subRemoteTableData(event, true);
+	}
+	
+	const resetDefaultParam = () => {
+		subRemoteTableData({
+			searchData: searchParam,
+			tableData: tableColumn,
+		});
+	};
+	
+<% if (isOpenDbClickView) { %>
+  // 双击查看
+  const tableDbClick: VxeTableEvents.CellDblclick<<%= atPageModel %>> = (rowData) => {
+	if ((permissionItems.value & E_PermissionItems.查看) !== E_PermissionItems.查看) {
+		ElMessage.warning('该账户没有此操作权限！');
+		return;
+	}
+	if (!tableExplate.value?.tableExmpale || !internalInstance) {
+		ElMessage.warning('参数错误');
+		return;
+	}
+	if (internalInstance) {
+		const modules = modalModules.<%= dbClickViewModalName %>;
+		openModal(
+			'<%= dbClickViewModalName %>',
+			null,
+			modules,
+			{rowData},
+			{ RefreshTableData },
+			internalInstance,
+			'view'
+		);
+	}
+  };
+<% } %>
+
+
+	
+<% if (isOpenFooterMethod) { %>
+  const footerMethod: VxeTablePropTypes.FooterMethod<<%= atPageModel %>> = (rows: any) => {
+  	const { columns, data } = rows;
+  	return footerSum<<%= atPageModel %>>(columns, data, [<% footerMethodRecordArr.forEach(function(item, index) { %>'<%= item %>'<% if(index < footerMethodRecordArr.length - 1) { %>,<% } %><% }); %>]);
+  };
+<% } %>
+
+	
+
+	return {
+		footerMethod,
+		tableDbClick,
+		useCurrentParam,
+		resetDefaultParam
+	};
+};

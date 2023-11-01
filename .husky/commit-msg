@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "========= 执行commit-msg校验 ======="
+npm run commitlint
+
+echo "执行ts和eslint类型检查..."
+npm run husky
+if [ $? -ne 0 ]; then
+  echo "ts类型eslint检测报错,解决ts类型eslint报错后再提交"
+  exit 1
+fi

@@ -1,0 +1,133 @@
+<template>
+	<div class="page-container">
+		<div v-if="!pageLoading" class="page-content">
+			<div class="table-box">
+				<jlg-table
+					ref="tableExplate"
+				   <% if (isOpenTableOptionCloumn) { %> :table-option-cloumn="tableOptionCloumn" <% } %>
+					:table-column="tableColumn"
+					:search-select-data="searchSelectData"
+					:remote-table-column="remoteTableColumn"
+					:remote-search-param="remoteSearchParam"
+					:table-data="tableData.data"
+					:table-colum-slots="tableColumnSlots"
+					:is-quick-search="<% if (isQuickSearch) { %> true <% } else { %> false <% } %>"
+					:loading-icon="logoUrl"
+					:table-loading="tableLoading"
+					:operation-search="searchParam"
+					:is-open-check="<% if (isOpenCheck) { %> true <% } else { %> false <% } %>"
+				   <% if (isOpenFooterMethod) { %> :footer-method="tableData.data.length === 0 ? null : footerMethod" <% } %> 
+					:is-open-radio="<% if (isOpenRadio) { %> true <% } else { %> false <% } %>"
+					@search-data="searchTableData"
+					@reset-search-form="clearSearchData"
+					@quick-search="quickSearch"
+				   <% if (isOpenRadio) { %> @table-db-click="tableDbClick" <% } %>
+					@reset-default-param="resetDefaultParam"
+					@set-current-param="subRemoteTableData"
+					@change-sort-status="changeSortStatus"
+					@use-current-param="useCurrentParam"
+				>
+					
+				<% if (optionLeftBtnArr) { %>
+					<template #option-left>
+						<div>
+							<% optionLeftBtnArr.forEach(function(item, index) { %> <jlg-button <% if (item.value) { %> v-if="(permissionItems & <%= item.value %>) == <%= item.value %>" <% } %> 
+							<% if (index === 0) { %> class="option-left-first-button" <% } else { %> class="option-left-buttons" <% } %> %>
+							<% if (item.icon) { %> :icon="<%= item.icon %>" <% } %>>
+								<%= item.key %>
+							</jlg-button> <% }) %>
+						</div>
+					</template> 
+				<% } %>
+					
+					
+				<% if (isOpenTableOptionCloumn) { %> 
+					<template #tableOptionCloumn="{ rowData }">
+						<% tableOptionCloumnBtnArr.forEach(function(item, index) { %> 
+							 <div class="table-option-cloumn">
+								<jlg-button <% if (item.value) { %> v-if="(permissionItems & <%= item.value %>) == <%= item.value %>" <% } %> link> 
+									<%= item.key %> 
+								</jlg-button>
+							</div>
+						<% }) %>
+					</template>
+				<% } %>
+					
+				</jlg-table>
+			</div>
+			<div class="page-foot">
+				<jlg-page :page-param="pageParam" :has-refresh="true" @refresh-data="refreshData" @change-page-param="changePageParam"></jlg-page>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+import pageHook from '@/mixin/hookpage';
+import tableHook from '@/mixin/table';
+import tableJsonsHook from './hooks/tableJsons';
+import eventsHook from './hooks/events';
+import {<%= atPageModel %>, <%= atQueryModel %>, <%= pageAxiosName %>,} from '@/apiType/production/result';
+import { T_JlgTableRef } from './type';
+import variablesHook from './hooks/variables';
+
+defineOptions({
+	name: '<%= folderName %>',
+});
+
+const { tableColumn, searchParam } = tableJsonsHook();
+
+const tableExplate = ref<T_JlgTableRef | null>(null);
+
+const { isQuickSearch, searchSelectData, remoteSearchParam, remoteTableColumn, tableOptionCloumn, tableReqBody, tableColumnSlots } = variablesHook();
+
+const { pageLoading, permissionItems, internalInstance } = pageHook(() => {
+	pageLoading.value = false;
+});
+
+// 调用查询接口的方法
+const initTableData = (reqData: <%= atQueryModel %>) => {
+	tableLoading.value = true;
+	<%= pageAxiosName %>(reqData)
+		.then((result) => {
+			if (result.data.status === 1) {
+				if (result.data.content.item1) {
+					tableData.data = result.data.content.item1;
+					pageParam.total = result.data.content.item2;
+				}
+			}
+		})
+		.finally(() => {
+			tableLoading.value = false;
+		});
+};
+
+// 表格hook数据
+const {
+	logoUrl,
+	pageParam,
+	tableData,
+	tableLoading,
+	searchTableData,
+	changePageParam,
+	clearSearchData,
+	refreshData,
+	subRemoteTableData,
+	changeSortStatus,
+	quickSearch,
+} = tableHook<<%= atPageModel %>, <%= atQueryModel %>>(initTableData, tableReqBody, tableExplate, remoteSearchParam, remoteTableColumn);
+
+const { footerMethod, tableDbClick, useCurrentParam,resetDefaultParam } = eventsHook(
+	permissionItems,
+	tableExplate,
+	internalInstance,
+	initTableData,
+	tableReqBody,
+	subRemoteTableData
+);
+
+</script>
+
+<style scoped lang="scss">
+@import './index.scss';
+</style>

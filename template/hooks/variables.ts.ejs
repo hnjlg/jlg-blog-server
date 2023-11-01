@@ -1,0 +1,33 @@
+import { I_SearchSelectData } from '../type';
+import { T_RemoteSearchParam, T_RemoteTableColumn } from '@/mixin/table';
+import { <%= atQueryModel %>, <%= atPageModel %> } from '@/apiType/production/result';
+
+export default ():{
+	isQuickSearch:Ref<boolean>, searchSelectData:I_SearchSelectData, remoteSearchParam:T_RemoteSearchParam<<%= atQueryModel %>>, remoteTableColumn:T_RemoteTableColumn<<%= atPageModel %>>, tableOptionCloumn:{ title: string, width: number }, tableReqBody:<%= atQueryModel %>, tableColumnSlots:string[]
+} => {
+	// 快捷检索
+	const isQuickSearch = ref<boolean>(true);
+	// 获取检索数据下拉
+	const searchSelectData = reactive<I_SearchSelectData>(<%- searchSelectData %>);
+	const remoteSearchParam = reactive<T_RemoteSearchParam<<%= atQueryModel %>>>({ data: [] });
+	const remoteTableColumn = reactive<T_RemoteTableColumn<<%= atPageModel %>>>({ data: [] });
+	const tableOptionCloumn = reactive({ title: '操作', width: 100 });
+	// 列表请求
+	const tableReqBody = reactive<<%= atQueryModel %>>({
+		pageIndex: 1,
+		pageSize: 30,
+		sorts: [],
+	});
+	// 传递的插槽
+	const tableColumnSlots = reactive([<% tableColumnSlots.forEach(function(item, index) { %>'<%= item %>'<% if(index < tableColumnSlots.length - 1) { %>,<% } %><% }); %>]);
+
+	return {
+		isQuickSearch,
+		searchSelectData,
+		remoteSearchParam,
+		remoteTableColumn,
+		tableOptionCloumn,
+		tableReqBody,
+		tableColumnSlots,
+	};
+};

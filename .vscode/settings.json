@@ -1,0 +1,12 @@
+{
+	"editor.formatOnSave": true,
+	"prettier.configPath": ".prettierrc.js",
+	"prettier.ignorePath": ".prettierignore",
+	"prettier.prettierPath": "",
+	"prettier.requireConfig": false,
+	// vetur版本低，与eslint不适配
+	"vetur.validation.template": false,
+	// 设置文件默认使用prettier格式化
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"cSpell.words": ["commitlint", "preinstall"]
+}
