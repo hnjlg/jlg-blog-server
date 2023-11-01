@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routers from './routes';
@@ -7,11 +7,12 @@ import { rateLimit } from 'express-rate-limit';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
-import uuid from 'node-uuid';
+import crypto from 'crypto';
 import dayjs from 'dayjs';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import 'dayjs/locale/zh-cn';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 // 你的JSON文件的路径
 const jsonFile = process.env.NODE_ENV_FILE;
@@ -92,7 +93,7 @@ app.use(cors());
 let morganId: string;
 
 app.use((req, res, next) => {
-	morganId = uuid.v4();
+	morganId = crypto.randomBytes(32).toString('hex');
 	next();
 });
 
@@ -135,7 +136,29 @@ const port = process.env.SERVER_PORT;
 // 设置静态文件目录，用于存放文件夹及其中文件
 app.use(express.static('public'));
 
-routers({ app });
+let systemUser: string | JwtPayload | undefined;
+
+const jwtKey = crypto.randomBytes(32).toString('hex');
+
+const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+	if (!['/login'].includes(req.path)) {
+		const authHeader = req.headers['authorization'];
+		const token = authHeader && authHeader.split(' ')[1];
+		if (token == null) return res.sendStatus(401);
+		jwt.verify(token, jwtKey, (err, user) => {
+			if (err) return res.sendStatus(403);
+			systemUser = user;
+			console.log(systemUser, 'systemUser');
+			next();
+		});
+	} else {
+		next();
+	}
+};
+
+app.use(authenticateToken);
+
+routers({ app, jwtKey });
 
 // 启动服务器
 app.listen(port);
