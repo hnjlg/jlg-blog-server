@@ -13,6 +13,23 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import 'dayjs/locale/zh-cn';
 
+// 你的JSON文件的路径
+const jsonFile = process.env.NODE_ENV_FILE;
+
+if (jsonFile) {
+	try {
+		const jsonData = fs.readFileSync(jsonFile, 'utf8');
+		const envData = JSON.parse(jsonData);
+		for (const key in envData) {
+			if (envData.hasOwnProperty(key)) {
+				process.env[key] = envData[key];
+			}
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 dayjs.locale('zh-cn');
 
 const app = express();
@@ -22,13 +39,17 @@ const swaggerOptions = {
 	definition: {
 		openapi: '3.0.0',
 		info: {
-			title: 'My API',
+			title: 'JLG_EXPRESS',
 			version: '1.0.0',
 			description: 'API 文档',
+			license: {
+				name: 'swagger.json',
+				url: process.env.SERVER_URL + '/swagger.json',
+			},
 		},
 		servers: [
 			{
-				url: 'http://localhost:3000',
+				url: process.env.SERVER_URL,
 			},
 		],
 	},
@@ -109,7 +130,7 @@ app.use(
 ); // 适当调整大小限制以满足您的需求
 
 // 端口号
-const port = 3000;
+const port = process.env.SERVER_PORT;
 
 // 设置静态文件目录，用于存放文件夹及其中文件
 app.use(express.static('public'));
@@ -117,6 +138,4 @@ app.use(express.static('public'));
 routers({ app });
 
 // 启动服务器
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});
+app.listen(port);

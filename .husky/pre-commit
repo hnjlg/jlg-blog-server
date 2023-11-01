@@ -2,3 +2,11 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "========== 执行pre-commit 操作 =========="
+
+npm run commitlint
+
+echo "执行ts和eslint类型检查..."
+
+npx tsc --noEmit
+npx eslint ./src
+npx prettier --check ./src

@@ -1,6 +1,6 @@
 // 判断是否是一个有效的URL
 export const isValidURL = (url: string) => {
-	var pattern = new RegExp(
+	const pattern = new RegExp(
 		'^(https?:\\/\\/)?' + // 协议
 			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // 域名
 			'((\\d{1,3}\\.){3}\\d{1,3}))' + // IP地址

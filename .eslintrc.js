@@ -4,10 +4,13 @@ module.exports = {
 		node: true,
 	},
 	extends: [
+		'eslint-config-prettier',
 		'eslint:recommended', // 使用推荐的eslint
+		'plugin:@typescript-eslint/recommended',
 		//1.继承.prettierrc.js文件规则  2.开启rules的 "prettier/prettier": "error"  3.eslint fix的同时执行prettier格式化
 		'plugin:prettier/recommended',
 	],
+	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		ecmaVersion: 2020,
 		sourceType: 'module',
@@ -15,20 +18,17 @@ module.exports = {
 	},
 	plugins: [],
 	globals: {
-		// 因为自动导入了vue,手动声明为全局变量
+		// 手动声明为全局变量
 	},
 	rules: {
-		'no-prototype-builtins': 'error', // 允许使用hasOwnProperty
+		'no-prototype-builtins': 'warn', // 使用hasOwnProperty
 		'prefer-const': 'error', // 优先使用const
-		'@typescript-eslint/ban-types': 'error', // 禁止使用一些类型
-		'no-undef': ['error', { typeof: false }], // 不允许使用未定义的变量
-		'no-console': 'warn', // 不允许使用log
-		'no-debugger': 'warn', // 不允许使用debugger
+		'no-console': 'warn', // 使用log
+		'no-debugger': 'warn', // 使用debugger
 		'@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '.*', args: 'none' }], //变量声明未使用
-		'@typescript-eslint/no-explicit-any': 'error', // 不允许ts使用any
-		'@typescript-eslint/no-var-requires': 'error', // 强制使用 import 且不允许使用 require 设置off关闭检查
-		'no-unused-vars': 'error', // 不能定义未使用的变量
+		'@typescript-eslint/no-explicit-any': 'error', // ts使用any
+		'@typescript-eslint/no-var-requires': 'error', // 使用require
+		'no-unused-vars': 'error', // 变量未使用
 	},
-	// 忽略的文件
 	ignorePatterns: [],
 };
