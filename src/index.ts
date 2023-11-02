@@ -41,7 +41,7 @@ const swaggerOptions = {
 		openapi: '3.0.0',
 		info: {
 			title: 'JLG_EXPRESS',
-			version: '1.0.0',
+			version: dayjs().format('YYYY/MM/DD-HH:mm:ss'),
 			description: 'API 文档',
 			license: {
 				name: 'swagger.json',
