@@ -113,7 +113,7 @@ app.use(
 				'}',
 			].join('\n');
 		},
-		{ stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' }) }
+		{ stream: fs.createWriteStream(path.join(__dirname, '../public/access.log'), { flags: 'a' }) }
 	)
 );
 
