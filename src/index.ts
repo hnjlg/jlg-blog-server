@@ -13,22 +13,16 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import 'dayjs/locale/zh-cn';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-// 你的JSON文件的路径
-const jsonFile = process.env.NODE_ENV_FILE;
-
-if (jsonFile) {
-	try {
-		const jsonData = fs.readFileSync(jsonFile, 'utf8');
-		const envData = JSON.parse(jsonData);
-		for (const key in envData) {
-			if (envData.hasOwnProperty(key)) {
-				process.env[key] = envData[key];
-			}
-		}
-	} catch (error) {
-		console.error(error);
-	}
+if (process.env.NODE_ENV === 'production') {
+	dotenv.config({
+		path: '.env.production',
+	});
+} else {
+	dotenv.config({
+		path: '.env.build',
+	});
 }
 
 dayjs.locale('zh-cn');
@@ -161,4 +155,6 @@ app.use(authenticateToken);
 routers({ app, jwtKey });
 
 // 启动服务器
-app.listen(port);
+app.listen(port, () => {
+	console.log(process.env.SERVER_URL);
+});
