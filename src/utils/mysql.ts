@@ -5,7 +5,7 @@ import path from 'path';
 import dayjs from 'dayjs';
 
 const mysqlWriteLog = (writeContent: string) => {
-	fs.appendFile(path.join(__dirname, '../../public/mysql.log'), writeContent + '\n', (err) => {
+	fs.appendFile(path.join(__dirname, '../mysql.log'), writeContent + '\n', (err) => {
 		if (err) {
 			throw err;
 		}
