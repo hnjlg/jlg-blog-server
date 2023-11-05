@@ -1,5 +1,5 @@
 import mysql, { FieldPacket } from 'mysql2';
-import dbConfig from '../mysql.config';
+import dbConfig from '../config/mysql.config';
 import fs from 'fs';
 import path from 'path';
 import dayjs from 'dayjs';

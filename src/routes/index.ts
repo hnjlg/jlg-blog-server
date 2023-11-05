@@ -1,4 +1,4 @@
-import errorSdkRouter from './error-sdk';
+import errorSdkRouter from './err-sdk';
 import generateFksPageTemplateRouter from './generate-fks-page-template';
 import userRouter from './user';
 import { Application } from 'express';
