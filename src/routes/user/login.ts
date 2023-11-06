@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { I_User } from '../../types/users';
+import CryptoJS from 'crypto-js';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -21,23 +22,26 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 				.withMessage('password length must between 5 and 20'),
 		],
 		(req: Request, res: Response) => {
-			const { username, password } = req.body;
-			// 在实际应用中，这里应该是对用户名和密码进行验证的逻辑
+			const { password } = req.body;
 			// sql查询user表
 			mysqlUTils.query<string, I_User>('SELECT * FROM users', [], function (results) {
-				// 如果验证通过，则生成JWT令牌并返回给客户端
-				const findUser = results?.find((item) => item.user_name === username && item.pass_word === password);
-				if (findUser) {
-					const token = jwt.sign({ username: username }, jwtKey);
-					res.json({
+				const user: I_User | undefined = results?.find((item) => {
+					console.log(CryptoJS.SHA256(password).toString(), item.pass_word);
+					return CryptoJS.SHA256(password).toString() === item.pass_word;
+				});
+				if (user) {
+					// 如果验证通过，则生成JWT令牌并返回给客户端
+					const token = jwt.sign({ username: user.user_name }, jwtKey);
+					res.status(200).json({
 						status: 1,
 						message: 'success',
 						content: {
 							token,
-							userCode: findUser.user_code,
+							userCode: user.user_code,
 						},
 					});
 				} else {
+					// 密码验证失败，返回登录失败信息
 					res.status(401).json({ status: 1, message: 'failed', content: '登录失败' });
 				}
 			});

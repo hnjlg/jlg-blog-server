@@ -1,6 +1,6 @@
 import { body, validationResult } from 'express-validator';
 import { SourceMapConsumer } from 'source-map';
-import { isJSONString, isValidURL } from '../../utils/validator';
+import { isJSONString } from '../../utils/validator';
 import { Application, Request, Response } from 'express';
 import http from 'http';
 
@@ -8,12 +8,7 @@ export default ({ app }: { app: Application }) => {
 	app.post(
 		'/sourceMap',
 		[
-			body('fileUrl').custom((value) => {
-				if (!isValidURL(value)) {
-					throw new Error('fileUrl is not a valid URL');
-				}
-				return true;
-			}),
+			body('fileUrl').isURL().withMessage('fileUrl is not a valid URL'),
 			body('err.lineno').isInt().withMessage('err.lineno must be a number'),
 			body('err.colno').isInt().withMessage('err.colno must be a number'),
 		],
