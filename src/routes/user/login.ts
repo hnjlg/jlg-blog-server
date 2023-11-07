@@ -26,7 +26,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 			// sql查询user表
 			mysqlUTils.query<string, I_User>('SELECT * FROM users', [], function (results) {
 				const user: I_User | undefined = results?.find((item) => {
-					console.log(CryptoJS.SHA256(password).toString(), item.pass_word);
 					return CryptoJS.SHA256(password).toString() === item.pass_word;
 				});
 				if (user) {

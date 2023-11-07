@@ -11,7 +11,7 @@
 					:remote-search-param="remoteSearchParam"
 					:table-data="tableData.data"
 					:table-colum-slots="tableColumnSlots"
-					:is-quick-search="<% if (isQuickSearch) { %> true <% } else { %> false <% } %>"
+					:is-quick-search="isQuickSearch"
 					:loading-icon="logoUrl"
 					:table-loading="tableLoading"
 					:operation-search="searchParam"
@@ -21,7 +21,7 @@
 					@search-data="searchTableData"
 					@reset-search-form="clearSearchData"
 					@quick-search="quickSearch"
-				   <% if (isOpenRadio) { %> @table-db-click="tableDbClick" <% } %>
+				   <% if (isOpenDbClickView) { %> @table-db-click="tableDbClick" <% } %>
 					@reset-default-param="resetDefaultParam"
 					@set-current-param="subRemoteTableData"
 					@change-sort-status="changeSortStatus"
@@ -123,7 +123,9 @@ const { footerMethod, tableDbClick, useCurrentParam,resetDefaultParam } = events
 	internalInstance,
 	initTableData,
 	tableReqBody,
-	subRemoteTableData
+	subRemoteTableData,
+	searchParam,
+	tableColumn
 );
 
 </script>

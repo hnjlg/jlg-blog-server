@@ -6,7 +6,7 @@ export default ():{
 	isQuickSearch:Ref<boolean>, searchSelectData:I_SearchSelectData, remoteSearchParam:T_RemoteSearchParam<<%= atQueryModel %>>, remoteTableColumn:T_RemoteTableColumn<<%= atPageModel %>>, tableOptionCloumn:{ title: string, width: number }, tableReqBody:<%= atQueryModel %>, tableColumnSlots:string[]
 } => {
 	// 快捷检索
-	const isQuickSearch = ref<boolean>(true);
+	const isQuickSearch = ref<boolean>(<% if (isQuickSearch) { %> true <% } else { %> false <% } %>);
 	// 获取检索数据下拉
 	const searchSelectData = reactive<I_SearchSelectData>(<%- searchSelectData %>);
 	const remoteSearchParam = reactive<T_RemoteSearchParam<<%= atQueryModel %>>>({ data: [] });

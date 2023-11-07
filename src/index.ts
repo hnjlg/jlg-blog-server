@@ -17,6 +17,9 @@ dayjs.locale('zh-cn');
 
 const app = express();
 
+// 设置静态文件目录，用于存放文件夹及其中文件
+app.use(express.static('public'));
+
 // 请求速率拦截
 app.use(
 	rateLimit({
@@ -27,11 +30,19 @@ app.use(
 	})
 );
 
-// 允许所有来源的跨域请求
-app.use(cors());
+// 允许所有来源的跨域请求,允许所有来源请求静态资源
+app.use(cors({ origin: '*' }));
 
 // 安全性保护
-app.use(helmet());
+app.use(
+	helmet({
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["'self'"], // 允许加载自身域名的资源
+			},
+		},
+	})
+);
 
 bodyParams({ app });
 
@@ -41,9 +52,6 @@ swaggerConfig({ app });
 
 // 端口号
 const port = process.env.SERVER_PORT;
-
-// 设置静态文件目录，用于存放文件夹及其中文件
-app.use(express.static('public'));
 
 const { jwtKey } = jwtConfig({ app });
 

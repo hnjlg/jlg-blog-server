@@ -1,5 +1,5 @@
 import downloadFolderName from './download-folderName';
-import generateFolderName from './download-folderName';
+import generateFolderName from './generate-folderName';
 
 import { Application } from 'express';
 

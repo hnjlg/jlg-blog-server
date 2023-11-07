@@ -6,16 +6,16 @@ import path from 'path';
 import { createNullFile } from '../../utils/file';
 
 const generateFile = (oldFileName: string, newFileName: string, templateData: object, folderName: string, callback: () => void) => {
-	fs.readFile(path.join(__dirname, `../../template/${oldFileName}`), 'utf8', (err, template) => {
+	fs.readFile(path.join(__dirname, `../../../template/${oldFileName}`), 'utf8', (err, template) => {
 		if (err) throw err;
 
 		// 替换模板变量
 		const output = ejs.render(template, templateData);
 
-		createNullFile(path.join(__dirname, `../../public/${folderName}/${newFileName}`));
+		createNullFile(path.join(__dirname, `../../../public/${folderName}/${newFileName}`));
 
 		// 生成最终文件
-		fs.writeFile(path.join(__dirname, `../../public/${folderName}/${newFileName}`), output, 'utf8', (err) => {
+		fs.writeFile(path.join(__dirname, `../../../public/${folderName}/${newFileName}`), output, 'utf8', (err) => {
 			callback();
 			if (err) throw err;
 		});

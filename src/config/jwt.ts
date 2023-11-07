@@ -8,18 +8,18 @@ export default ({ app }: { app: Application }): { jwtKey: string } => {
 	const jwtKey = crypto.randomBytes(32).toString('hex');
 
 	const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-		if (!['/login'].includes(req.path)) {
+		if (['/login'].includes(req.path) || req.path.startsWith('/download/')) {
+			next();
+		} else {
 			const authHeader = req.headers['authorization'];
 			const token = authHeader && authHeader.split(' ')[1];
 			if (token == null) return res.sendStatus(401);
 			jwt.verify(token, jwtKey, (err, user) => {
 				if (err) return res.sendStatus(403);
 				systemUser = user;
-				console.log(systemUser, 'systemUser');
+				console.log(systemUser);
 				next();
 			});
-		} else {
-			next();
 		}
 	};
 
