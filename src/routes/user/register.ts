@@ -1,13 +1,13 @@
 import { Application } from 'express';
 import { body } from 'express-validator';
-import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { I_User } from '../../types/users';
+import dayjs from 'dayjs';
 
-export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
+export default ({ app }: { app: Application }) => {
 	app.post(
-		'/user/login',
+		'/user/register',
 		[
 			body('userName')
 				.notEmpty()
@@ -22,24 +22,25 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 		],
 		(req: Request, res: Response) => {
 			const { userName, passWord } = req.body;
-			mysqlUTils.query<[], I_User[]>('SELECT id, user_name, pass_word, user_code FROM users WHERE valid = 1;', [], function (results) {
-				const user: I_User | undefined = results?.find((item) => {
-					return item.pass_word === passWord && userName === item.user_name;
-				});
-				if (user) {
-					const token = jwt.sign({ userName: user.user_name }, jwtKey);
-					res.status(200).json({
-						status: 1,
-						message: 'success',
-						content: {
-							id: user.id,
-							userName: user.user_name,
-							userCode: user.user_code,
-							token,
-						},
+			mysqlUTils.query<[string], [{ count: number }]>('SELECT COUNT(*) as count FROM users WHERE user_name = ?', [userName], function (results) {
+				if (results && results[0].count > 0) {
+					return res.status(401).json({
+						status: 2,
+						message: 'failed',
+						content: results,
 					});
 				} else {
-					res.status(401).json({ status: 1, message: 'failed', content: '登录失败' });
+					mysqlUTils.query<[string, string, string], I_User[]>(
+						'INSERT INTO users(user_name,pass_word,user_code) values (?,?,?);',
+						[userName, passWord, 'U' + dayjs().format('YYYYMMDDHHmmss')],
+						function (results) {
+							return res.status(200).json({
+								status: 1,
+								message: 'success',
+								content: results,
+							});
+						}
+					);
 				}
 			});
 		}
@@ -48,12 +49,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 
 /**
  * @swagger
- * /user/login:
+ * /user/register:
  *   post:
  *     tags: ['user']
- *     summary: 登录
+ *     summary: 注册
  *     description: |
- *       登录系统
+ *       注册系统账户
  *     requestBody:
  *       required: true
  *       content:
@@ -68,8 +69,8 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *                 type: string
  *                 description: 加密密码
  *             example:
- *               userName: "admin"
- *               passWord: "20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"
+ *               userName: "test1"
+ *               passWord: "a123456"
  *     responses:
  *       '200':
  *         description: Success
@@ -89,16 +90,25 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *                   items:
  *                     type: object
  *                     properties:
- *                       id:
+ *                       fieldCount:
  *                         type: integer
- *                         description: 用户id
- *                       token:
+ *                         description: 描述
+ *                       affectedRows:
+ *                         type: integer
+ *                         description: 描述
+ *                       insertId:
+ *                         type: integer
+ *                         description: 描述
+ *                       info:
  *                         type: string
- *                         description: 用户token
- *                       userName:
- *                         type: string
- *                         description: 用户名
- *                       userCode:
- *                         type: string
- *                         description: 用户Code
+ *                         description: 描述
+ *                       serverStatus:
+ *                         type: integer
+ *                         description: 描述
+ *                       warningStatus:
+ *                         type: integer
+ *                         description: 描述
+ *                       changedRows:
+ *                         type: integer
+ *                         description: 描述
  */

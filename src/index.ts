@@ -51,13 +51,13 @@ requestLog({ app });
 swaggerConfig({ app });
 
 // 端口号
-const port = process.env.SERVER_PORT;
+const port = Number(process.env.SERVER_PORT) ?? 3000;
 
 const { jwtKey } = jwtConfig({ app });
 
 routers({ app, jwtKey });
 
 // 启动服务器
-app.listen(port, () => {
-	console.log(process.env.SERVER_URL);
+app.listen(port, function () {
+	console.log(`Server running at http://localhost:${port}/`);
 });

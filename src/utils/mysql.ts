@@ -12,11 +12,7 @@ const mysqlWriteLog = (writeContent: string) => {
 	});
 };
 
-const query = <ParamsRecord, ResultRecord>(
-	sql: string,
-	params: ParamsRecord[],
-	callback?: (results: ResultRecord[] | null, fields: FieldPacket[]) => unknown
-) => {
+const query = <Params, Result>(sql: string, params: Params, callback?: (results: Result | null, fields: FieldPacket[]) => unknown) => {
 	//每次使用的时候需要创建链接，数据操作完成之后要关闭连接
 	const connection = mysql.createConnection(dbConfig);
 	connection.connect(function (err) {

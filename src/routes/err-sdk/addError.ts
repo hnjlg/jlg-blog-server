@@ -23,7 +23,7 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			mysqlUTils.query<string, number>(
+			mysqlUTils.query<[string, string, string], []>(
 				'INSERT INTO `errors`(type_value,user_code,error_content) VALUES(?,?,?);',
 				[typeValue, userCode, errorContent],
 				function (results) {

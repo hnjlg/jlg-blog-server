@@ -8,7 +8,7 @@ export default ({ app }: { app: Application }): { jwtKey: string } => {
 	const jwtKey = crypto.randomBytes(32).toString('hex');
 
 	const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-		if (['/login'].includes(req.path) || req.path.startsWith('/download/')) {
+		if (['/user/login', '/user/register'].includes(req.path) || req.path.startsWith('/download/') || req.path.startsWith('/blob/')) {
 			next();
 		} else {
 			const authHeader = req.headers['authorization'];
