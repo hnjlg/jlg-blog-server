@@ -22,26 +22,27 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 		],
 		(req: Request, res: Response) => {
 			const { userName, passWord } = req.body;
-			mysqlUTils.query<[], I_User[]>('SELECT id, user_name, pass_word, user_code FROM users WHERE valid = 1;', [], function (results) {
-				const user: I_User | undefined = results?.find((item) => {
-					return item.pass_word === passWord && userName === item.user_name;
-				});
-				if (user) {
-					const token = jwt.sign({ userName: user.user_name }, jwtKey);
-					res.status(200).json({
-						status: 1,
-						message: 'success',
-						content: {
-							id: user.id,
-							userName: user.user_name,
-							userCode: user.user_code,
-							token,
-						},
-					});
-				} else {
-					res.status(401).json({ status: 1, message: 'failed', content: '登录失败' });
+			mysqlUTils.query<[string, string], I_User[]>(
+				'SELECT id, user_name, pass_word, user_code FROM users WHERE user_name = ? AND pass_word = ? AND valid = 1;',
+				[userName, passWord],
+				function (results) {
+					if (results && results.length === 1) {
+						const token = jwt.sign({ userName: results[0].user_name }, jwtKey);
+						res.status(200).json({
+							status: 1,
+							message: 'success',
+							content: {
+								id: results[0].id,
+								userName: results[0].user_name,
+								userCode: results[0].user_code,
+								token,
+							},
+						});
+					} else {
+						res.status(401).json({ status: 1, message: 'failed', content: '登录失败' });
+					}
 				}
-			});
+			);
 		}
 	);
 };

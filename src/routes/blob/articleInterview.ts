@@ -1,50 +1,40 @@
 import { Application, Request, Response } from 'express';
-import { body } from 'express-validator';
+import { validationResult, body } from 'express-validator';
 import mysqlUTils from '../../utils/mysql';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/user/delete',
-		[body('author').notEmpty().withMessage('author cannot be empty').isInt().withMessage('author must be number')],
+		'/blob/article/articleInterview',
+		[body('articleId').notEmpty().withMessage('articleId cannot be empty').isInt().withMessage('articleId must be a number')],
 		(req: Request, res: Response) => {
-			const { author } = req.body;
-
-			mysqlUTils.query<
-				[number],
-				[
-					{
-						count: number;
-					},
-				]
-			>('SELECT COUNT(*) as count FROM users WHERE id = ?;', [Number(author)], function (results) {
-				if (results && results[0].count > 0) {
-					mysqlUTils.query<[number], []>(`UPDATE users SET valid = 0 where id = ?;`, [Number(author)], function (results) {
-						return res.status(200).json({
-							status: 1,
-							message: 'success',
-							content: results,
-						});
-					});
-				} else {
-					return res.status(401).json({
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
+			}
+			const { articleId } = req.body;
+			mysqlUTils.query<[number], []>(
+				'UPDATE blob_article SET reading_quantity = reading_quantity + 1 WHERE id = ?',
+				[Number(articleId)],
+				function (results) {
+					return res.status(200).json({
 						status: 1,
-						message: 'failed',
+						message: 'success',
 						content: results,
 					});
 				}
-			});
+			);
 		}
 	);
 };
 
 /**
  * @swagger
- * /user/delete:
+ * /blob/article/articleInterview:
  *   post:
- *     tags: ['user']
- *     summary: 删除用户
+ *     tags: ['blob']
+ *     summary: 文章阅读量+1
  *     description: |
- *       删除用户
+ *       文章阅读量+1
  *     requestBody:
  *       required: true
  *       content:
@@ -52,11 +42,11 @@ export default ({ app }: { app: Application }) => {
  *           schema:
  *             type: object
  *             properties:
- *               author:
+ *               articleId:
  *                 type: integer
- *                 description: 用户id
+ *                 description: 文章id
  *             example:
- *               author: 2
+ *               articleId: 1
  *     responses:
  *       '200':
  *         description: Success

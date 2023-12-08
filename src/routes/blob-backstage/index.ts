@@ -8,6 +8,7 @@ import articleSubmittedForDelete from './articleSubmittedForDelete';
 import articleForSearchAll from './articleForSearchAll';
 import articleForSearchByUserID from './articleForSearchByUserID';
 import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId';
+import articleForSearchByArticleId from './articleForSearchByArticleId';
 
 export default ({ app }: { app: Application }) => {
 	articleSubmittedForDraft({ app });
@@ -19,4 +20,5 @@ export default ({ app }: { app: Application }) => {
 	articleForSearchAll({ app });
 	articleForSearchByUserID({ app });
 	articleForSearchByArticleTreeId({ app });
+	articleForSearchByArticleId({ app });
 };
