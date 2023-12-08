@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { I_User } from '../../types/users';
 import dayjs from 'dayjs';
+import CryptoJS from 'crypto-js';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
@@ -32,7 +33,7 @@ export default ({ app }: { app: Application }) => {
 				} else {
 					mysqlUTils.query<[string, string, string], I_User[]>(
 						'INSERT INTO users(user_name,pass_word,user_code) values (?,?,?);',
-						[userName, passWord, 'U' + dayjs().format('YYYYMMDDHHmmss')],
+						[userName, CryptoJS.SHA256(passWord).toString(), 'U' + dayjs().format('YYYYMMDDHHmmss')],
 						function (results) {
 							return res.status(200).json({
 								status: 1,
