@@ -50,7 +50,7 @@ export default ({ app }: { app: Application }) => {
 							mysqlUTils.query<[number[]], []>(`SELECT * FROM article_tags WHERE id IN (?)`, [articleTags], function (results) {
 								if (results && results.length === articleTags.length) {
 									mysqlUTils.query<[string, string, string, number, number, number], { insertId: number }>(
-										`INSERT blob_article(title,content,content_html,status,author,article_tree_id) VALUES (?,?,?,?,?,?);`,
+										`INSERT blog_article(title,content,content_html,status,author,article_tree_id) VALUES (?,?,?,?,?,?);`,
 										[title, content, contentHTML, 1, Number(author), Number(articleTreeId)],
 										function (results) {
 											if (results && results.insertId) {

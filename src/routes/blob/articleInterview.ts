@@ -13,7 +13,7 @@ export default ({ app }: { app: Application }) => {
 			}
 			const { articleId } = req.body;
 			mysqlUTils.query<[number], []>(
-				'UPDATE blob_article SET reading_quantity = reading_quantity + 1 WHERE id = ?',
+				'UPDATE blog_article SET reading_quantity = reading_quantity + 1 WHERE id = ?',
 				[Number(articleId)],
 				function (results) {
 					return res.status(200).json({

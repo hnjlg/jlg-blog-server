@@ -12,7 +12,7 @@ export default ({ app }: { app: Application }) => {
 				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
 			}
 			const { articleId } = req.body;
-			mysqlUTils.query<[number], []>(`UPDATE blob_article SET status = 3 where id = ?;`, [Number(articleId)], function (results) {
+			mysqlUTils.query<[number], []>(`UPDATE blog_article SET status = 3 where id = ?;`, [Number(articleId)], function (results) {
 				return res.status(200).json({
 					status: 1,
 					message: 'success',

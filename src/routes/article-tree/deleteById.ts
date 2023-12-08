@@ -17,7 +17,7 @@ export default ({ app }: { app: Application }) => {
 						count: number;
 					},
 				]
-			>('SELECT COUNT(*) as count FROM blob_article WHERE article_tree_id = ?;', [Number(articleTreeId)], function (results) {
+			>('SELECT COUNT(*) as count FROM blog_article WHERE article_tree_id = ?;', [Number(articleTreeId)], function (results) {
 				// 如果该级文章树下还有文章不让删除
 				if (results && results[0].count > 0) {
 					return res.status(401).json({
