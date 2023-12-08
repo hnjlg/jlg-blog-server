@@ -1,10 +1,10 @@
 import { Application, Request, Response } from 'express';
-import { query, validationResult } from 'express-validator';
 import mysqlUTils from '../../utils/mysql';
+import { query, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.get(
-		'/blob/hot/tags/query',
+		'/blog/hot/query',
 		query('limit').notEmpty().withMessage('limit 参数不能为空').isInt({ min: 1 }).withMessage('limit 参数必须为大于 0 的整数'),
 		(req: Request, res: Response) => {
 			const errors = validationResult(req);
@@ -13,7 +13,7 @@ export default ({ app }: { app: Application }) => {
 			}
 			const { limit } = req.query;
 			mysqlUTils.query<[number], []>(
-				'SELECT article_tags.tag_name, COUNT(article_tag_connection.article_id) AS article_count FROM article_tags JOIN article_tag_connection ON article_tags.id = article_tag_connection.tag_id GROUP BY article_tags.id ORDER BY article_count DESC LIMIT ?;',
+				'SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id JOIN article_tags ON article_tag_connection.tag_id = article_tags.id WHERE blog_article.valid = 1 GROUP BY blog_article.id ORDER BY reading_quantity DESC LIMIT ?',
 				[Number(limit)],
 				function (results) {
 					return res.status(200).json({
@@ -29,19 +29,19 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob/hot/tags/query:
+ * /blog/hot/query:
  *   get:
- *     tags: ['blob']
- *     summary: 获取热门文章标签
+ *     tags: ['blog']
+ *     summary: 获取热门文章
  *     description: |
- *       获取热门文章标签列表，并可根据参数限制查询结果数量。
+ *       获取热门文章列表，并可根据参数限制查询结果数量。
  *     parameters:
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *         required: true
- *         description: 最多查询多少个文章标签
+ *         description: 最多查询多少篇文章
  *     responses:
  *       '200':
  *         description: Success
@@ -61,10 +61,23 @@ export default ({ app }: { app: Application }) => {
  *                   items:
  *                     type: object
  *                     properties:
- *                       article_count:
+ *                       id:
  *                         type: integer
- *                         description: 标签下文章数量
- *                       name:
+ *                         description: 文章id
+ *                       title:
  *                         type: string
- *                         description: 标签名称
+ *                         description: 文章标题
+ *                       content:
+ *                         type: string
+ *                         description: 文章内容
+ *                       reading_quantity:
+ *                         type: integer
+ *                         description: 文章阅读量
+ *                       add_time:
+ *                         type: string
+ *                         format: date-time  # 修改为 "date-time" 格式
+ *                         description: 文章发布时间
+ *                       tags:
+ *                         type: string
+ *                         description: 文章标签
  */

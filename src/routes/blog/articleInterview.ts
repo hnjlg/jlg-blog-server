@@ -1,36 +1,40 @@
 import { Application, Request, Response } from 'express';
+import { validationResult, body } from 'express-validator';
 import mysqlUTils from '../../utils/mysql';
-import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob-backstage/article/reject',
-		[body('articleId').notEmpty().withMessage('articleId不能为空').isInt().withMessage('articleId must be a number')],
+		'/blog/article/articleInterview',
+		[body('articleId').notEmpty().withMessage('articleId cannot be empty').isInt().withMessage('articleId must be a number')],
 		(req: Request, res: Response) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
 			}
 			const { articleId } = req.body;
-			mysqlUTils.query<[number], []>(`UPDATE blog_article SET status = 5 where id = ?;`, [Number(articleId)], function (results) {
-				return res.status(200).json({
-					status: 1,
-					message: 'success',
-					content: results,
-				});
-			});
+			mysqlUTils.query<[number], []>(
+				'UPDATE blog_article SET reading_quantity = reading_quantity + 1 WHERE id = ?',
+				[Number(articleId)],
+				function (results) {
+					return res.status(200).json({
+						status: 1,
+						message: 'success',
+						content: results,
+					});
+				}
+			);
 		}
 	);
 };
 
 /**
  * @swagger
- * /blob-backstage/article/reject:
+ * /blog/article/articleInterview:
  *   post:
- *     tags: ['blob-backstage']
- *     summary: 文章审核不通过
+ *     tags: ['blog']
+ *     summary: 文章阅读量+1
  *     description: |
- *       将待审文章改为驳回
+ *       文章阅读量+1
  *     requestBody:
  *       required: true
  *       content:

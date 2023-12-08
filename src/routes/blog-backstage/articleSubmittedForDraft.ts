@@ -4,7 +4,7 @@ import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob-backstage/article/add',
+		'/blog-backstage/article/draft/add',
 		[
 			body('title').notEmpty().withMessage('标题title不能为空'),
 			body('content').notEmpty().withMessage('文章内容content不能为空'),
@@ -94,12 +94,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob-backstage/article/add:
+ * /blog-backstage/article/draft/add:
  *   post:
- *     tags: ['blob-backstage']
- *     summary: 新增博客文章
+ *     tags: ['blog-backstage']
+ *     summary: 新增草稿文章
  *     description: |
- *       新增一篇待审的文章
+ *       新增一篇草稿状态的文章
  *     requestBody:
  *       required: true
  *       content:

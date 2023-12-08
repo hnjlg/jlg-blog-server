@@ -4,7 +4,7 @@ import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob-backstage/article/delete',
+		'/blog-backstage/article/review',
 		[body('articleId').notEmpty().withMessage('articleId不能为空').isInt().withMessage('articleId must be a number')],
 		(req: Request, res: Response) => {
 			const errors = validationResult(req);
@@ -12,7 +12,7 @@ export default ({ app }: { app: Application }) => {
 				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
 			}
 			const { articleId } = req.body;
-			mysqlUTils.query<[number], []>(`UPDATE blog_article SET valid = 0 where id = ?;`, [Number(articleId)], function (results) {
+			mysqlUTils.query<[number], []>(`UPDATE blog_article SET status = 3 where id = ?;`, [Number(articleId)], function (results) {
 				return res.status(200).json({
 					status: 1,
 					message: 'success',
@@ -25,12 +25,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob-backstage/article/delete:
+ * /blog-backstage/article/review:
  *   post:
- *     tags: ['blob-backstage']
- *     summary: 删除文章
+ *     tags: ['blog-backstage']
+ *     summary: 文章审核通过
  *     description: |
- *       删除文章
+ *       将待审文章改为审核通过
  *     requestBody:
  *       required: true
  *       content:

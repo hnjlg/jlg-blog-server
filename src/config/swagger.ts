@@ -10,7 +10,7 @@ export default ({ app }: { app: Application }) => {
 		definition: {
 			openapi: '3.0.0',
 			info: {
-				title: 'JLG_BLOB',
+				title: 'JLG_BLOG',
 				version: dayjs().format('YYYY/MM/DD-HH:mm:ss'),
 				description: 'API 文档',
 				license: {

@@ -4,11 +4,8 @@ import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob/tags/query',
-		[
-			body('pageSize').notEmpty().withMessage('pageSize cannot be empty').isInt().withMessage('pageSize must be a number'),
-			body('pageIndex').notEmpty().withMessage('pageIndex cannot be empty').isInt().withMessage('pageIndex must be a number'),
-		],
+		'/blog-backstage/article/query/for/articleId',
+		[body('articleId').notEmpty().withMessage('articleId cannot be empty').isInt().withMessage('articleId must be a number')],
 		(req: Request, res: Response) => {
 			const result = validationResult(req);
 
@@ -20,10 +17,16 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			const { pageSize, pageIndex, tagName } = req.body;
-			mysqlUTils.query<[string, number, number] | [number, number], []>(
-				`SELECT article_tags.id, article_tags.tag_name FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''} LIMIT ? OFFSET ?;`,
-				tagName !== undefined ? [`%${tagName}%`, pageSize, (pageIndex - 1) * pageSize] : [pageSize, (pageIndex - 1) * pageSize],
+			const { articleId } = req.body;
+			mysqlUTils.query<[number], []>(
+				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
+                FROM blog_article 
+                JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
+                JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
+                LEFT JOIN article_status ON blog_article.status = article_status.status_value 
+                WHERE blog_article.valid = 1 AND blog_article.id = ? 
+                GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
+				[Number(articleId)],
 				function (results) {
 					return res.status(200).json({
 						status: 1,
@@ -38,12 +41,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob/tags/query:
+ * /blog-backstage/article/query/for/articleId:
  *   post:
- *     tags: ['blob']
- *     summary: 获取所有标签
+ *     tags: ['blog-backstage']
+ *     summary: 获取文章详情通过文章id
  *     description: |
- *       获取所有标签，并可根据参数分页查询。
+ *       获取文章详情
  *     requestBody:
  *       required: true
  *       content:
@@ -51,19 +54,11 @@ export default ({ app }: { app: Application }) => {
  *           schema:
  *             type: object
  *             properties:
- *               pageIndex:
+ *               articleId:
  *                 type: integer
- *                 description: 要获取的页数
- *               pageSize:
- *                 type: integer
- *                 description: 每页显示的文章数量
- *               tagName:
- *                 type: string
- *                 description: 标签名tagName查询
+ *                 description: 文章id
  *             example:
- *               pageIndex: 1
- *               pageSize: 10
- *               tagName: "标签"
+ *               articleId: 1
  *     responses:
  *       '200':
  *         description: Success

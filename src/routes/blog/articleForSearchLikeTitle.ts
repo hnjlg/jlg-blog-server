@@ -4,10 +4,11 @@ import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob-backstage/article/all/query',
+		'/blog/article/like/title/query',
 		[
 			body('pageSize').notEmpty().withMessage('pageSize cannot be empty').isInt().withMessage('pageSize must be a number'),
 			body('pageIndex').notEmpty().withMessage('pageIndex cannot be empty').isInt().withMessage('pageIndex must be a number'),
+			body('title').notEmpty().withMessage('pageIndex cannot be empty'),
 		],
 		(req: Request, res: Response) => {
 			const result = validationResult(req);
@@ -20,17 +21,17 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			const { pageSize, pageIndex } = req.body;
-			mysqlUTils.query<[number, number], []>(
+			const { pageSize, pageIndex, title } = req.body;
+			mysqlUTils.query<[string, number, number], []>(
 				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
 				GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
 				JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
 				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
 				LEFT JOIN article_status ON blog_article.status = article_status.status_value 
-				WHERE blog_article.valid = 1
+				WHERE blog_article.valid = 1 AND blog_article.title LIKE ?
 				GROUP BY blog_article.id 
 				LIMIT ? OFFSET ?;`,
-				[Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
+				[`%${title}%`, Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {
 					return res.status(200).json({
 						status: 1,
@@ -45,12 +46,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob-backstage/article/all/query:
+ * /blog/article/like/title/query:
  *   post:
- *     tags: ['blob-backstage']
- *     summary: 管理员获取文章列表
+ *     tags: ['blog']
+ *     summary: 通过文章标题查询文章列表
  *     description: |
- *       获取文章，并可根据参数分页查询。
+ *       通过文章标题查询文章列表，并可根据参数分页查询。
  *     requestBody:
  *       required: true
  *       content:
@@ -64,9 +65,13 @@ export default ({ app }: { app: Application }) => {
  *               pageSize:
  *                 type: integer
  *                 description: 每页显示的文章数量
+ *               title:
+ *                 type: string
+ *                 description: 文章标题模糊查询
  *             example:
  *               pageIndex: 1
  *               pageSize: 10
+ *               title: "1"
  *     responses:
  *       '200':
  *         description: Success

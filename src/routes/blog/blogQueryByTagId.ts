@@ -1,32 +1,24 @@
 import { Application, Request, Response } from 'express';
+import { validationResult, body } from 'express-validator';
 import mysqlUTils from '../../utils/mysql';
-import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob/article/query/for/articleTreeId',
-		[body('articleTreeId').notEmpty().withMessage('articleTreeId cannot be empty').isInt().withMessage('articleTreeId must be a number')],
+		'/blog/articles/query/byTagId',
+		[
+			body('tagId').notEmpty().withMessage('tagId 参数不能为空'),
+			body('pageSize').notEmpty().withMessage('pageSize cannot be empty').isInt().withMessage('pageSize must be a number'),
+			body('pageIndex').notEmpty().withMessage('pageIndex cannot be empty').isInt().withMessage('pageIndex must be a number'),
+		],
 		(req: Request, res: Response) => {
-			const result = validationResult(req);
-
-			if (!result.isEmpty()) {
-				return res.status(400).json({
-					status: 2,
-					message: 'failed',
-					content: result.array(),
-				});
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
 			}
-
-			const { articleTreeId } = req.body;
-			mysqlUTils.query<[number], []>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
-                FROM blog_article 
-                JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
-                JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
-                LEFT JOIN article_status ON blog_article.status = article_status.status_value 
-                WHERE blog_article.valid = 1 AND blog_article.article_tree_id = ? 
-                GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
-				[Number(articleTreeId)],
+			const { tagId, pageSize, pageIndex } = req.body;
+			mysqlUTils.query<[number, number, number], []>(
+				'SELECT blog_article.* FROM blog_article JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id JOIN article_tags ON article_tag_connection.tag_id = article_tags.id WHERE article_tags.id = ? AND blog_article.valid = 1 LIMIT ? OFFSET ?;',
+				[Number(tagId), Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {
 					return res.status(200).json({
 						status: 1,
@@ -41,12 +33,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob/article/query/for/articleTreeId:
+ * /blog/articles/query/byTagId:
  *   post:
- *     tags: ['blob']
- *     summary: 获取文章列表通过文章树id
+ *     tags: ['blog']
+ *     summary: 查询标签下的文章
  *     description: |
- *       获取文章
+ *       查询标签下的文章，并可根据参数分页查询。
  *     requestBody:
  *       required: true
  *       content:
@@ -54,11 +46,19 @@ export default ({ app }: { app: Application }) => {
  *           schema:
  *             type: object
  *             properties:
- *               articleTreeId:
+ *               pageIndex:
  *                 type: integer
- *                 description: 文章树id
+ *                 description: 要获取的页数
+ *               pageSize:
+ *                 type: integer
+ *                 description: 每页显示的文章数量
+ *               byTagId:
+ *                 type: number
+ *                 description: 标签id tagId查询
  *             example:
- *               articleTreeId: 2
+ *               pageIndex: 1
+ *               pageSize: 10
+ *               tagId: 1
  *     responses:
  *       '200':
  *         description: Success
@@ -94,7 +94,4 @@ export default ({ app }: { app: Application }) => {
  *                         type: string
  *                         format: date-time
  *                         description: 文章发布时间
- *                       tags:
- *                         type: string
- *                         description: 文章标签
  */

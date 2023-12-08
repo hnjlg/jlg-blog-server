@@ -4,12 +4,8 @@ import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob/article/like/title/query',
-		[
-			body('pageSize').notEmpty().withMessage('pageSize cannot be empty').isInt().withMessage('pageSize must be a number'),
-			body('pageIndex').notEmpty().withMessage('pageIndex cannot be empty').isInt().withMessage('pageIndex must be a number'),
-			body('title').notEmpty().withMessage('pageIndex cannot be empty'),
-		],
+		'/blog-backstage/article/query/for/articleTreeId',
+		[body('articleTreeId').notEmpty().withMessage('articleTreeId cannot be empty').isInt().withMessage('articleTreeId must be a number')],
 		(req: Request, res: Response) => {
 			const result = validationResult(req);
 
@@ -21,17 +17,16 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			const { pageSize, pageIndex, title } = req.body;
-			mysqlUTils.query<[string, number, number], []>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
-				GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
-				JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
-				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
-				LEFT JOIN article_status ON blog_article.status = article_status.status_value 
-				WHERE blog_article.valid = 1 AND blog_article.title LIKE ?
-				GROUP BY blog_article.id 
-				LIMIT ? OFFSET ?;`,
-				[`%${title}%`, Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
+			const { articleTreeId } = req.body;
+			mysqlUTils.query<[number], []>(
+				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
+                FROM blog_article 
+                JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
+                JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
+                LEFT JOIN article_status ON blog_article.status = article_status.status_value 
+                WHERE blog_article.valid = 1 AND blog_article.article_tree_id = ? 
+                GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
+				[Number(articleTreeId)],
 				function (results) {
 					return res.status(200).json({
 						status: 1,
@@ -46,12 +41,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob/article/like/title/query:
+ * /blog-backstage/article/query/for/articleTreeId:
  *   post:
- *     tags: ['blob']
- *     summary: 通过文章标题查询文章列表
+ *     tags: ['blog-backstage']
+ *     summary: 获取文章列表通过文章树id
  *     description: |
- *       通过文章标题查询文章列表，并可根据参数分页查询。
+ *       获取文章
  *     requestBody:
  *       required: true
  *       content:
@@ -59,19 +54,11 @@ export default ({ app }: { app: Application }) => {
  *           schema:
  *             type: object
  *             properties:
- *               pageIndex:
+ *               articleTreeId:
  *                 type: integer
- *                 description: 要获取的页数
- *               pageSize:
- *                 type: integer
- *                 description: 每页显示的文章数量
- *               title:
- *                 type: string
- *                 description: 文章标题模糊查询
+ *                 description: 文章树id
  *             example:
- *               pageIndex: 1
- *               pageSize: 10
- *               title: "1"
+ *               articleTreeId: 2
  *     responses:
  *       '200':
  *         description: Success

@@ -1,18 +1,18 @@
 import { Application } from 'express';
-import blobHotQuery from './blobHotQuery';
-import blobTagsQuery from './blobTagsQuery';
+import blogHotQuery from './blogHotQuery';
+import blogTagsQuery from './blogTagsQuery';
 import tagHotQuery from './tagHotQuery';
-import blobQueryByTagId from './blobQueryByTagId';
+import blogQueryByTagId from './blogQueryByTagId';
 import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId';
 import articleInterview from './articleInterview';
 import articleForSearchByArticleId from './articleForSearchByArticleId';
 import articleForSearchLikeTitle from './articleForSearchLikeTitle';
 
 export default ({ app }: { app: Application }) => {
-	blobHotQuery({ app });
-	blobTagsQuery({ app });
+	blogHotQuery({ app });
+	blogTagsQuery({ app });
 	tagHotQuery({ app });
-	blobQueryByTagId({ app });
+	blogQueryByTagId({ app });
 	articleForSearchByArticleTreeId({ app });
 	articleInterview({ app });
 	articleForSearchByArticleId({ app });

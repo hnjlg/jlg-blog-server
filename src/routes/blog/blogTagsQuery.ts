@@ -4,8 +4,11 @@ import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob-backstage/article/query/for/articleId',
-		[body('articleId').notEmpty().withMessage('articleId cannot be empty').isInt().withMessage('articleId must be a number')],
+		'/blog/tags/query',
+		[
+			body('pageSize').notEmpty().withMessage('pageSize cannot be empty').isInt().withMessage('pageSize must be a number'),
+			body('pageIndex').notEmpty().withMessage('pageIndex cannot be empty').isInt().withMessage('pageIndex must be a number'),
+		],
 		(req: Request, res: Response) => {
 			const result = validationResult(req);
 
@@ -17,16 +20,10 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			const { articleId } = req.body;
-			mysqlUTils.query<[number], []>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
-                FROM blog_article 
-                JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
-                JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
-                LEFT JOIN article_status ON blog_article.status = article_status.status_value 
-                WHERE blog_article.valid = 1 AND blog_article.id = ? 
-                GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
-				[Number(articleId)],
+			const { pageSize, pageIndex, tagName } = req.body;
+			mysqlUTils.query<[string, number, number] | [number, number], []>(
+				`SELECT article_tags.id, article_tags.tag_name FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''} LIMIT ? OFFSET ?;`,
+				tagName !== undefined ? [`%${tagName}%`, pageSize, (pageIndex - 1) * pageSize] : [pageSize, (pageIndex - 1) * pageSize],
 				function (results) {
 					return res.status(200).json({
 						status: 1,
@@ -41,12 +38,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob-backstage/article/query/for/articleId:
+ * /blog/tags/query:
  *   post:
- *     tags: ['blob-backstage']
- *     summary: 获取文章详情通过文章id
+ *     tags: ['blog']
+ *     summary: 获取所有标签
  *     description: |
- *       获取文章详情
+ *       获取所有标签，并可根据参数分页查询。
  *     requestBody:
  *       required: true
  *       content:
@@ -54,11 +51,19 @@ export default ({ app }: { app: Application }) => {
  *           schema:
  *             type: object
  *             properties:
- *               articleId:
+ *               pageIndex:
  *                 type: integer
- *                 description: 文章id
+ *                 description: 要获取的页数
+ *               pageSize:
+ *                 type: integer
+ *                 description: 每页显示的文章数量
+ *               tagName:
+ *                 type: string
+ *                 description: 标签名tagName查询
  *             example:
- *               articleId: 1
+ *               pageIndex: 1
+ *               pageSize: 10
+ *               tagName: "标签"
  *     responses:
  *       '200':
  *         description: Success

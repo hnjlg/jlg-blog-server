@@ -1,24 +1,36 @@
 import { Application, Request, Response } from 'express';
-import { validationResult, body } from 'express-validator';
 import mysqlUTils from '../../utils/mysql';
+import { body, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/blob/articles/query/byTagValue',
+		'/blog-backstage/article/all/query',
 		[
-			body('tagValue').notEmpty().withMessage('tagValue 参数不能为空'),
 			body('pageSize').notEmpty().withMessage('pageSize cannot be empty').isInt().withMessage('pageSize must be a number'),
 			body('pageIndex').notEmpty().withMessage('pageIndex cannot be empty').isInt().withMessage('pageIndex must be a number'),
 		],
 		(req: Request, res: Response) => {
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
+			const result = validationResult(req);
+
+			if (!result.isEmpty()) {
+				return res.status(400).json({
+					status: 2,
+					message: 'failed',
+					content: result.array(),
+				});
 			}
-			const { tagValue, pageSize, pageIndex } = req.body;
-			mysqlUTils.query<[number, number, number], []>(
-				'SELECT blog_article.* FROM blog_article JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id JOIN article_tags ON article_tag_connection.tag_id = article_tags.id WHERE article_tags.tag_value = ? AND blog_article.valid = 1 LIMIT ? OFFSET ?;',
-				[Number(tagValue), Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
+
+			const { pageSize, pageIndex } = req.body;
+			mysqlUTils.query<[number, number], []>(
+				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
+				GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
+				JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
+				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
+				LEFT JOIN article_status ON blog_article.status = article_status.status_value 
+				WHERE blog_article.valid = 1
+				GROUP BY blog_article.id 
+				LIMIT ? OFFSET ?;`,
+				[Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {
 					return res.status(200).json({
 						status: 1,
@@ -33,12 +45,12 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blob/articles/query/byTagValue:
+ * /blog-backstage/article/all/query:
  *   post:
- *     tags: ['blob']
- *     summary: 查询标签下的文章
+ *     tags: ['blog-backstage']
+ *     summary: 管理员获取文章列表
  *     description: |
- *       查询标签下的文章，并可根据参数分页查询。
+ *       获取文章，并可根据参数分页查询。
  *     requestBody:
  *       required: true
  *       content:
@@ -52,13 +64,9 @@ export default ({ app }: { app: Application }) => {
  *               pageSize:
  *                 type: integer
  *                 description: 每页显示的文章数量
- *               tagValue:
- *                 type: number
- *                 description: 标签值 tagValue查询
  *             example:
  *               pageIndex: 1
  *               pageSize: 10
- *               tagId: 1
  *     responses:
  *       '200':
  *         description: Success
@@ -94,4 +102,7 @@ export default ({ app }: { app: Application }) => {
  *                         type: string
  *                         format: date-time
  *                         description: 文章发布时间
+ *                       tags:
+ *                         type: string
+ *                         description: 文章标签
  */
