@@ -56,17 +56,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               pageIndex:
- *                 type: integer
- *                 description: 要获取的页数
- *               pageSize:
- *                 type: integer
- *                 description: 每页显示的文章数量
- *             example:
- *               pageIndex: 1
- *               pageSize: 10
+ *             $ref: '#/components/schemas/BlogBackstageArticleAllQueryRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -84,25 +74,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         description: 文章id
- *                       title:
- *                         type: string
- *                         description: 文章标题
- *                       content:
- *                         type: string
- *                         description: 文章内容
- *                       reading_quantity:
- *                         type: integer
- *                         description: 文章阅读量
- *                       add_time:
- *                         type: string
- *                         format: date-time
- *                         description: 文章发布时间
- *                       tags:
- *                         type: string
- *                         description: 文章标签
+ *                     $ref: '#/components/schemas/BlogBackstageArticleAllQueryResponse'
  */

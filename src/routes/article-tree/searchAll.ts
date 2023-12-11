@@ -38,15 +38,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         description: 文章树id
- *                       article_tree_name:
- *                         type: string
- *                         description: 文章树标题
- *                       parent_article_tree_id:
- *                         type: string
- *                         description: 父级文章树
+ *                     $ref: '#/components/schemas/MySQLResult'
  */

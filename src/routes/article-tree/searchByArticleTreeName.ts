@@ -52,21 +52,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               pageIndex:
- *                 type: integer
- *                 description: 要获取的页数
- *               pageSize:
- *                 type: integer
- *                 description: 每页显示的文章树数量
- *               articleTreeName:
- *                 type: string
- *                 description: 文章树名称articleTreeName
- *             example:
- *               pageIndex: 1
- *               pageSize: 10
- *               articleTreeName: "1"
+ *             $ref: '#/components/schemas/ArticleTreeArticleTreeNameQueryRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -84,15 +70,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         description: 文章树id
- *                       article_tree_name:
- *                         type: string
- *                         description: 文章树标题
- *                       parent_article_tree_id:
- *                         type: string
- *                         description: 父级文章树
+ *                     $ref: '#/components/schemas/MySQLResult'
  */

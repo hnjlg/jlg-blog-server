@@ -60,17 +60,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               userName:
- *                 type: string
- *                 description: 用户名
- *               passWord:
- *                 type: string
- *                 description: 加密密码
- *             example:
- *               userName: "admin"
- *               passWord: "20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"
+ *             $ref: '#/components/schemas/UserLoginRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -88,18 +78,5 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         description: 用户id
- *                       token:
- *                         type: string
- *                         description: 用户token
- *                       userName:
- *                         type: string
- *                         description: 用户名
- *                       userCode:
- *                         type: string
- *                         description: 用户Code
+ *                     $ref: '#/components/schemas/UserLoginResponse'
  */

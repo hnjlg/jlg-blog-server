@@ -4,7 +4,7 @@ import { query, validationResult } from 'express-validator';
 
 export default ({ app }: { app: Application }) => {
 	app.get(
-		'/blog/hot/query',
+		'/blog/hot/article/query',
 		query('limit').notEmpty().withMessage('limit 参数不能为空').isInt({ min: 1 }).withMessage('limit 参数必须为大于 0 的整数'),
 		(req: Request, res: Response) => {
 			const errors = validationResult(req);
@@ -29,7 +29,7 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /blog/hot/query:
+ * /blog/hot/article/query:
  *   get:
  *     tags: ['blog']
  *     summary: 获取热门文章
@@ -59,25 +59,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         description: 文章id
- *                       title:
- *                         type: string
- *                         description: 文章标题
- *                       content:
- *                         type: string
- *                         description: 文章内容
- *                       reading_quantity:
- *                         type: integer
- *                         description: 文章阅读量
- *                       add_time:
- *                         type: string
- *                         format: date-time  # 修改为 "date-time" 格式
- *                         description: 文章发布时间
- *                       tags:
- *                         type: string
- *                         description: 文章标签
+ *                     $ref: '#/components/schemas/BlogHotArticleQueryResponse'
  */

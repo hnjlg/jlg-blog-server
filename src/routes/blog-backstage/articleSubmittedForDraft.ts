@@ -105,34 +105,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *                 description: 新增文章的标题
- *               content:
- *                 type: string
- *                 description: 新增文章的内容
- *               contentHTML:
- *                 type: string
- *                 description: 新增文章的内容（包含html标签元素）
- *               author:
- *                 type: integer
- *                 description: 用户id
- *               articleTreeId:
- *                 type: integer
- *                 description: 文章树id
- *               articleTags:
- *                 type: array
- *                 items:
- *                   type: integer
- *             example:
- *               title: "你好"
- *               content: "Hello World"
- *               contentHTML: "<h1>Hello World</h1>"
- *               author: 1
- *               articleTreeId: 2
- *               articleTags: [1, 2]
+ *             $ref: '#/components/schemas/BlogBackstageArticleDraftAddRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -150,27 +123,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       fieldCount:
- *                         type: integer
- *                         description: 描述
- *                       affectedRows:
- *                         type: integer
- *                         description: 描述
- *                       insertId:
- *                         type: integer
- *                         description: 描述
- *                       info:
- *                         type: string
- *                         description: 描述
- *                       serverStatus:
- *                         type: integer
- *                         description: 描述
- *                       warningStatus:
- *                         type: integer
- *                         description: 描述
- *                       changedRows:
- *                         type: integer
- *                         description: 描述
+ *                     $ref: '#/components/schemas/MySQLResult'
  */

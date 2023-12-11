@@ -58,17 +58,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               author:
- *                 type: integer
- *                 description: 用户id
- *               passWord:
- *                 type: string
- *                 description: 加密密码
- *             example:
- *               author: 1
- *               passWord: "20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"
+ *             $ref: '#/components/schemas/UserUpdateRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -86,27 +76,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       fieldCount:
- *                         type: integer
- *                         description: 描述
- *                       affectedRows:
- *                         type: integer
- *                         description: 描述
- *                       insertId:
- *                         type: integer
- *                         description: 描述
- *                       info:
- *                         type: string
- *                         description: 描述
- *                       serverStatus:
- *                         type: integer
- *                         description: 描述
- *                       warningStatus:
- *                         type: integer
- *                         description: 描述
- *                       changedRows:
- *                         type: integer
- *                         description: 描述
+ *                     $ref: '#/components/schemas/MySQLResult'
  */

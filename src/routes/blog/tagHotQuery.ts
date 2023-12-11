@@ -13,7 +13,7 @@ export default ({ app }: { app: Application }) => {
 			}
 			const { limit } = req.query;
 			mysqlUTils.query<[number], []>(
-				'SELECT article_tags.tag_name, COUNT(article_tag_connection.article_id) AS article_count FROM article_tags JOIN article_tag_connection ON article_tags.id = article_tag_connection.tag_id GROUP BY article_tags.id ORDER BY article_count DESC LIMIT ?;',
+				'SELECT article_tags.id, article_tags.tag_name, COUNT(article_tag_connection.article_id) AS article_count FROM article_tags JOIN article_tag_connection ON article_tags.id = article_tag_connection.tag_id GROUP BY article_tags.id ORDER BY article_count DESC LIMIT ?;',
 				[Number(limit)],
 				function (results) {
 					return res.status(200).json({
@@ -59,12 +59,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       article_count:
- *                         type: integer
- *                         description: 标签下文章数量
- *                       name:
- *                         type: string
- *                         description: 标签名称
+ *                     $ref: '#/components/schemas/BlogHotTagsQueryResponse'
  */

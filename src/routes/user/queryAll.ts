@@ -53,17 +53,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               pageIndex:
- *                 type: integer
- *                 description: 要获取的页数
- *               pageSize:
- *                 type: integer
- *                 description: 每页显示的文章数量
- *             example:
- *               pageIndex: 1
- *               pageSize: 10
+ *             $ref: '#/components/schemas/UserQueryAllRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -81,27 +71,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         description: 用户id
- *                       user_name:
- *                         type: string
- *                         description: 用户名
- *                       pass_word:
- *                         type: string
- *                         description: 用户密码
- *                       user_code:
- *                         type: string
- *                         description: 用户code
- *                       user_standing_id:
- *                         type: integer
- *                         description: 用户类型id
- *                       standing_name:
- *                         type: string
- *                         description: 用户类型名称
- *                       standing_value:
- *                         type: integer
- *                         description: 用户类型值
+ *                     $ref: '#components/schemas/UserQueryAllResponse'
  */

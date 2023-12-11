@@ -36,13 +36,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               articleId:
- *                 type: integer
- *                 description: 文章id
- *             example:
- *               articleId: 1
+ *             $ref: '#/components/schemas/BlogBackstageArticleReviewRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -60,27 +54,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       fieldCount:
- *                         type: integer
- *                         description: 描述
- *                       affectedRows:
- *                         type: integer
- *                         description: 描述
- *                       insertId:
- *                         type: integer
- *                         description: 描述
- *                       info:
- *                         type: string
- *                         description: 描述
- *                       serverStatus:
- *                         type: integer
- *                         description: 描述
- *                       warningStatus:
- *                         type: integer
- *                         description: 描述
- *                       changedRows:
- *                         type: integer
- *                         description: 描述
+ *                     $ref: '#/components/schemas/MySQLResult'
  */

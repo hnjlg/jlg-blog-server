@@ -5,7 +5,7 @@ import mysqlUTils from '../../utils/mysql';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
-		'/article-tree/delete',
+		'/article-tree/byId/delete',
 		[body('articleTreeId').notEmpty().withMessage('articleTreeId cannot be empty').isInt().withMessage('articleTreeId must be number')],
 		(req: Request, res: Response) => {
 			const { articleTreeId } = req.body;
@@ -59,7 +59,7 @@ export default ({ app }: { app: Application }) => {
 
 /**
  * @swagger
- * /article-tree/delete:
+ * /article-tree/byId/delete:
  *   post:
  *     tags: ['article-tree']
  *     summary: 删除文章树
@@ -70,13 +70,7 @@ export default ({ app }: { app: Application }) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               articleTreeId:
- *                 type: integer
- *                 description: 文章树id
- *             example:
- *               articleTreeId: 1
+ *             $ref: '#/components/schemas/ArticleTreeByIdDeleteRequest'
  *     responses:
  *       '200':
  *         description: Success
@@ -94,27 +88,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       fieldCount:
- *                         type: integer
- *                         description: 描述
- *                       affectedRows:
- *                         type: integer
- *                         description: 描述
- *                       insertId:
- *                         type: integer
- *                         description: 描述
- *                       info:
- *                         type: string
- *                         description: 描述
- *                       serverStatus:
- *                         type: integer
- *                         description: 描述
- *                       warningStatus:
- *                         type: integer
- *                         description: 描述
- *                       changedRows:
- *                         type: integer
- *                         description: 描述
+ *                     $ref: '#/components/schemas/MySQLResult'
  */
