@@ -29,7 +29,7 @@ export default ({ app }: { app: Application }) => {
 					'}',
 				].join('\n');
 			},
-			{ stream: fs.createWriteStream(path.join(__dirname, '../access.log'), { flags: 'a' }) }
+			{ stream: fs.createWriteStream(path.join(__dirname, '../logs/access.log'), { flags: 'a' }) }
 		)
 	);
 };
