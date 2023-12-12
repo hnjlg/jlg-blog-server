@@ -15,7 +15,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 
 	blogRouter({ app });
 
-	blogBackstage({ app });
+	blogBackstage({ app, jwtKey });
 
 	articleTreeRouter({ app });
 };
@@ -250,6 +250,9 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
+ *         author:
+ *           type: integer
+ *           description: 作者id
  *         add_time:
  *           type: string
  *           format: date-time
@@ -408,6 +411,9 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
+ *         author:
+ *           type: integer
+ *           description: 作者id
  *         add_time:
  *           type: string
  *           format: date-time

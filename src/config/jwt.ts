@@ -1,10 +1,8 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
 export default ({ app }: { app: Application }): { jwtKey: string } => {
-	let systemUser: string | JwtPayload | undefined;
-
 	const jwtKey = crypto.randomBytes(32).toString('hex');
 
 	const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
@@ -14,10 +12,8 @@ export default ({ app }: { app: Application }): { jwtKey: string } => {
 			const authHeader = req.headers['authorization'];
 			const token = authHeader && authHeader.split(' ')[1];
 			if (token == null) return res.sendStatus(401);
-			jwt.verify(token, jwtKey, (err, user) => {
+			jwt.verify(token, jwtKey, (err) => {
 				if (err) return res.sendStatus(403);
-				systemUser = user;
-				console.log(systemUser);
 				next();
 			});
 		}
