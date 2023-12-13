@@ -27,7 +27,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 				[userName, passWord],
 				function (results) {
 					if (results && results.length === 1) {
-						const token = jwt.sign({ userName: results[0].user_name }, jwtKey);
+						const token = jwt.sign({ userName: results[0].user_name, id: results[0].id }, jwtKey);
 						res.status(200).json({
 							status: 1,
 							message: 'success',

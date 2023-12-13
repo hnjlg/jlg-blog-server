@@ -10,7 +10,7 @@ import articleForSearchByUserID from './articleForSearchByUserID';
 import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId';
 import articleForSearchByArticleId from './articleForSearchByArticleId';
 
-export default ({ app }: { app: Application }) => {
+export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	articleSubmittedForDraft({ app });
 	articleSubmittedForWaitReview({ app });
 	articleSubmittedForReview({ app });
@@ -20,5 +20,5 @@ export default ({ app }: { app: Application }) => {
 	articleForSearchAll({ app });
 	articleForSearchByUserID({ app });
 	articleForSearchByArticleTreeId({ app });
-	articleForSearchByArticleId({ app });
+	articleForSearchByArticleId({ app, jwtKey });
 };

@@ -13,7 +13,7 @@ const mysqlWriteLog = (writeContent: string) => {
 	});
 };
 
-const query = <Params, Result>(sql: string, params: Params, callback?: (results: Result | null, fields: FieldPacket[]) => unknown) => {
+const query = <Params, Result>(sql: string, params: Params, callback?: (results: Result, fields: FieldPacket[]) => unknown) => {
 	const connection = mysql.createConnection(dbConfig);
 	connection.connect(function (err) {
 		if (err) {
