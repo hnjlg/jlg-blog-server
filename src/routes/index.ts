@@ -142,7 +142,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         pageSize:
  *           type: integer
  *           description: 每页显示的文章数量
- *         byTagId:
+ *         tagId:
  *           type: integer
  *           description: 标签id tagId查询
  *     BlogHotArticleQueryResponse:

@@ -28,11 +28,17 @@ export default ({ app }: { app: Application }) => {
 				} LIMIT ? OFFSET ?;`,
 				[`%${articleTreeName}%`, Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {
-					return res.status(200).json({
-						status: 1,
-						message: 'success',
-						content: results,
-					});
+					mysqlUTils.query<[string] | [], [{ total: number }]>(
+						`SELECT COUNT(*) AS total from article_tree ${articleTreeName !== undefined ? 'WHERE article_tree_name LIKE ?' : ''};`,
+						[`%${articleTreeName}%`],
+						function (resultsTotal) {
+							return res.status(200).json({
+								status: 1,
+								message: 'success',
+								content: { arr: results, total: resultsTotal[0].total },
+							});
+						}
+					);
 				}
 			);
 		}
@@ -68,7 +74,13 @@ export default ({ app }: { app: Application }) => {
  *                   type: string
  *                   description: success表示成功，failed表示失败
  *                 content:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/MySQLResult'
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       description: 数据量
+ *                     arr:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/MySQLResult'
  */

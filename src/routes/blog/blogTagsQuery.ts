@@ -25,11 +25,17 @@ export default ({ app }: { app: Application }) => {
 				`SELECT article_tags.id, article_tags.tag_name FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''} LIMIT ? OFFSET ?;`,
 				tagName !== undefined ? [`%${tagName}%`, pageSize, (pageIndex - 1) * pageSize] : [pageSize, (pageIndex - 1) * pageSize],
 				function (results) {
-					return res.status(200).json({
-						status: 1,
-						message: 'success',
-						content: results,
-					});
+					mysqlUTils.query<[string] | [], [{ total: number }]>(
+						`SELECT COUNT(*) AS total FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''};`,
+						tagName !== undefined ? [`%${tagName}%`] : [],
+						function (resultTotal) {
+							return res.status(200).json({
+								status: 1,
+								message: 'success',
+								content: { arr: results, total: resultTotal[0].total },
+							});
+						}
+					);
 				}
 			);
 		}
@@ -65,7 +71,13 @@ export default ({ app }: { app: Application }) => {
  *                   type: string
  *                   description: success表示成功，failed表示失败
  *                 content:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/BlogTagsQueryResponse'
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       description: 数据量
+ *                     arr:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/BlogTagsQueryResponse'
  */

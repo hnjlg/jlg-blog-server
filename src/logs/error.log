@@ -1,2 +1,5 @@
 Error: Unknown column 'a.id' in 'field list'
 Error: Unknown column 'a.id' in 'field list'
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT COUNT(*) AS total FROM blog_article WHERE blog_article.valid = 1' at line 8
+Error: Unknown column 'article_tags.id' in 'where clause'
+Error: Unknown column 'article_tags.id' in 'where clause'
