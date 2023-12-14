@@ -1,8 +1,11 @@
 import { Application, Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { body, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { E_User_Standing } from '../../types/standing';
+import { E_Article_Status } from '../../types/articleStatus';
 
-export default ({ app }: { app: Application }) => {
+export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
 		'/blog-backstage/article/all/query',
 		[
@@ -18,32 +21,68 @@ export default ({ app }: { app: Application }) => {
 					content: result.array(),
 				});
 			}
-
 			const { pageSize, pageIndex } = req.body;
-			mysqlUTils.query<[number, number], []>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
-				GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
-				JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
-				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
-				LEFT JOIN article_status ON blog_article.status = article_status.status_value 
-				WHERE blog_article.valid = 1
-				GROUP BY blog_article.id 
-				LIMIT ? OFFSET ?;`,
-				[Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
-				function (results) {
-					mysqlUTils.query<[], [{ total: number }]>(
-						`SELECT COUNT(*) AS total FROM blog_article WHERE blog_article.valid = 1;`,
-						[],
-						function (resultsTotal) {
-							return res.status(200).json({
-								status: 1,
-								message: 'success',
-								content: { arr: results, total: resultsTotal[0].total },
-							});
-						}
-					);
-				}
-			);
+			const authHeader = req.headers['authorization'];
+			const token = authHeader && authHeader.split(' ')[1];
+			if (token) {
+				jwt.verify(token, jwtKey, (err, user: any) => {
+					if (user.standing === E_User_Standing['管理员']) {
+						mysqlUTils.query<[E_Article_Status[], number, number], []>(
+							`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
+							GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
+							JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
+							JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
+							LEFT JOIN article_status ON blog_article.status = article_status.status_value 
+							WHERE blog_article.valid = 1 AND blog_article.status IN (?)
+							GROUP BY blog_article.id 
+							LIMIT ? OFFSET ?;`,
+							[
+								[E_Article_Status['待审'], E_Article_Status['公开'], E_Article_Status['驳回']],
+								Number(pageSize),
+								(Number(pageIndex) - 1) * Number(pageSize),
+							],
+							function (results) {
+								mysqlUTils.query<[], [{ total: number }]>(
+									`SELECT COUNT(*) AS total FROM blog_article WHERE blog_article.valid = 1;`,
+									[],
+									function (resultsTotal) {
+										return res.status(200).json({
+											status: 1,
+											message: 'success',
+											content: { arr: results, total: resultsTotal[0].total },
+										});
+									}
+								);
+							}
+						);
+					} else {
+						mysqlUTils.query<[number, number, number], []>(
+							`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
+							GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
+							JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
+							JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
+							LEFT JOIN article_status ON blog_article.status = article_status.status_value 
+							WHERE blog_article.valid = 1 AND blog_article.author = ?
+							GROUP BY blog_article.id 
+							LIMIT ? OFFSET ?;`,
+							[user.id, Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
+							function (results) {
+								mysqlUTils.query<[string], [{ total: number }]>(
+									`SELECT COUNT(*) AS total FROM blog_article WHERE blog_article.valid = 1 AND blog_article.author = ?;`,
+									[user.id],
+									function (resultsTotal) {
+										return res.status(200).json({
+											status: 1,
+											message: 'success',
+											content: { arr: results, total: resultsTotal[0].total },
+										});
+									}
+								);
+							}
+						);
+					}
+				});
+			}
 		}
 	);
 };
@@ -53,7 +92,7 @@ export default ({ app }: { app: Application }) => {
  * /blog-backstage/article/all/query:
  *   post:
  *     tags: ['blog-backstage']
- *     summary: 管理员获取文章列表
+ *     summary: 登录用户获取文章列表
  *     description: |
  *       获取文章，并可根据参数分页查询。
  *     requestBody:

@@ -2,6 +2,7 @@ import { Application, Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { body, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import { E_Article_Status } from '../../types/articleStatus';
 
 interface I_Blog_Article {
 	id: number;
@@ -14,14 +15,6 @@ interface I_Blog_Article {
 	tags: string;
 	author: number;
 	standing: number;
-}
-
-enum E_Article_Status {
-	'草稿' = 1,
-	'待审',
-	'公开',
-	'私有',
-	'驳回',
 }
 
 enum E_User_Standing {

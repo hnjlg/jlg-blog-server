@@ -23,11 +23,11 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 		(req: Request, res: Response) => {
 			const { userName, passWord } = req.body;
 			mysqlUTils.query<[string, string], I_User[]>(
-				'SELECT id, user_name, pass_word, user_code FROM users WHERE user_name = ? AND pass_word = ? AND valid = 1;',
+				'SELECT id, user_name, pass_word, user_code, standing FROM users WHERE user_name = ? AND pass_word = ? AND valid = 1;',
 				[userName, passWord],
 				function (results) {
 					if (results && results.length === 1) {
-						const token = jwt.sign({ userName: results[0].user_name, id: results[0].id }, jwtKey);
+						const token = jwt.sign({ userName: results[0].user_name, id: results[0].id, standing: results[0].standing }, jwtKey);
 						res.status(200).json({
 							status: 1,
 							message: 'success',

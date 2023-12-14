@@ -17,7 +17,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	articleSubmittedForReject({ app });
 	articleSubmittedForTakeback({ app });
 	articleSubmittedForDelete({ app });
-	articleForSearchAll({ app });
+	articleForSearchAll({ app, jwtKey });
 	articleForSearchByUserID({ app });
 	articleForSearchByArticleTreeId({ app });
 	articleForSearchByArticleId({ app, jwtKey });
