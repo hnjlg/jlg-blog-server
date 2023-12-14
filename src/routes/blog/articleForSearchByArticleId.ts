@@ -31,7 +31,7 @@ export default ({ app }: { app: Application }) => {
 
 			const { articleId } = req.body;
 			mysqlUTils.query<[number], I_Blog_Article[]>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.author, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
+				`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.author, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
                 FROM blog_article 
                 JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
                 JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 

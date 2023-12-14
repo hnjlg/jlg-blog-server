@@ -17,7 +17,7 @@ export default ({ app }: { app: Application }) => {
 			}
 			const { tagId, pageSize, pageIndex } = req.body;
 			mysqlUTils.query<[number, number, number], []>(
-				'SELECT blog_article.* FROM blog_article JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id JOIN article_tags ON article_tag_connection.tag_id = article_tags.id WHERE article_tags.id = ? AND blog_article.valid = 1 LIMIT ? OFFSET ?;',
+				'SELECT blog_article.id,blog_article.title,blog_article.reading_quantity,blog_article.add_time FROM blog_article JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id JOIN article_tags ON article_tag_connection.tag_id = article_tags.id WHERE article_tags.id = ? AND blog_article.valid = 1 LIMIT ? OFFSET ?;',
 				[Number(tagId), Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {
 					mysqlUTils.query<[number], [{ total: number }]>(

@@ -123,9 +123,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
@@ -154,9 +151,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
@@ -182,9 +176,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
@@ -216,9 +207,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
@@ -244,9 +232,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
@@ -343,9 +328,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
@@ -377,9 +359,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         title:
  *           type: string
  *           description: 文章标题
- *         content:
- *           type: string
- *           description: 文章内容
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
