@@ -387,12 +387,18 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         content:
  *           type: string
  *           description: 文章内容
+ *         content_html:
+ *           type: string
+ *           description: 文章内容HTML格式
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
  *         author:
  *           type: integer
  *           description: 作者id
+ *         author_name:
+ *           type: string
+ *           description: 作者名称
  *         add_time:
  *           type: string
  *           format: date-time
@@ -400,6 +406,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         tags:
  *           type: string
  *           description: 文章标签
+ *         article_tree_id:
+ *           type: integer
+ *           description: 文章所属目录id
+ *         article_tree_name:
+ *           type: string
+ *           description: 文章所属目录名称
  *     BlogBackstageArticleQueryForArticleRequest:
  *       type: object
  *       properties:
@@ -431,6 +443,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         status_value:
  *           type: integer
  *           description: 状态值
+ *         author:
+ *           type: integer
+ *           description: 作者id
+ *         author_name:
+ *           type: string
+ *           description: 作者名称
  *     BlogBackstageArticleAllQueryRequest:
  *       type: object
  *       properties:

@@ -39,12 +39,15 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 
 			const { articleId } = req.body;
 			mysqlUTils.query<[number], I_Blog_Article[]>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.author, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags, users.standing 
-                FROM blog_article 
+				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.content_html, 
+				blog_article.reading_quantity, blog_article.author, blog_article.add_time, blog_article.article_tree_id,
+				article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags, 
+				users.standing, users.user_name AS author_name, article_tree.article_tree_name FROM blog_article 
                 JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
                 JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
                 LEFT JOIN article_status ON blog_article.status = article_status.status_value
 				LEFT JOIN users ON blog_article.author = users.id
+				LEFT JOIN article_tree ON article_tree.id = blog_article.article_tree_id
                 WHERE blog_article.valid = 1 AND blog_article.id = ? 
                 GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
 				[Number(articleId)],
