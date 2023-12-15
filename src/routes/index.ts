@@ -260,13 +260,13 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         content:
  *           type: string
  *           description: 新增文章的内容
- *         contentHTML:
+ *         content_html:
  *           type: string
  *           description: 新增文章的内容（包含html标签元素）
  *         author:
  *           type: integer
  *           description: 用户id
- *         articleTreeId:
+ *         article_tree_id:
  *           type: integer
  *           description: 文章树id
  *         articleTags:

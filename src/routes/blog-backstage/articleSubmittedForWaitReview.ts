@@ -8,9 +8,9 @@ export default ({ app }: { app: Application }) => {
 		[
 			body('title').notEmpty().withMessage('标题title不能为空'),
 			body('content').notEmpty().withMessage('文章内容content不能为空'),
-			body('contentHTML').notEmpty().withMessage('文章内容contentHTML不能为空'),
+			body('content_html').notEmpty().withMessage('文章内容content_html不能为空'),
 			body('author').notEmpty().withMessage('作者author不能为空').isInt().withMessage('author must be a number'),
-			body('articleTreeId').notEmpty().withMessage('文章树articleTreeId不能为空').isInt().withMessage('articleTreeId must be a number'),
+			body('article_tree_id').notEmpty().withMessage('文章树article_tree_id不能为空').isInt().withMessage('article_tree_id must be a number'),
 			body('articleTags').custom((value) => {
 				if (!Array.isArray(value)) {
 					throw new Error('Value must be an array');
@@ -28,7 +28,7 @@ export default ({ app }: { app: Application }) => {
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
 			}
-			const { title, content, contentHTML, author, articleTreeId, articleTags } = req.body;
+			const { title, content, content_html, author, article_tree_id, articleTags } = req.body;
 			mysqlUTils.query<
 				[number],
 				[
@@ -45,13 +45,13 @@ export default ({ app }: { app: Application }) => {
 								count: number;
 							},
 						]
-					>('SELECT COUNT(*) as count FROM article_tree WHERE id = ?;', [Number(articleTreeId)], function (results) {
+					>('SELECT COUNT(*) as count FROM article_tree WHERE id = ?;', [Number(article_tree_id)], function (results) {
 						if (results && results[0].count > 0) {
 							mysqlUTils.query<[number[]], []>(`SELECT * FROM article_tags WHERE id IN (?)`, [articleTags], function (results) {
 								if (results && results.length === articleTags.length) {
 									mysqlUTils.query<[string, string, string, number, number, number], { insertId: number }>(
 										`INSERT blog_article(title,content,content_html,status,author,article_tree_id) VALUES (?,?,?,?,?,?);`,
-										[title, content, contentHTML, 1, Number(author), Number(articleTreeId)],
+										[title, content, content_html, 1, Number(author), Number(article_tree_id)],
 										function (results) {
 											if (results && results.insertId) {
 												mysqlUTils.query<[], []>(

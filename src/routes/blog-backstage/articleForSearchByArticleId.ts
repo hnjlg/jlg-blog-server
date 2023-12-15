@@ -38,63 +38,38 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 			}
 
 			const { articleId } = req.body;
-			mysqlUTils.query<[number], I_Blog_Article[]>(
-				`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.content_html, 
-				blog_article.reading_quantity, blog_article.author, blog_article.add_time, blog_article.article_tree_id,
-				article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags, 
-				users.standing, users.user_name AS author_name, article_tree.article_tree_name FROM blog_article 
-                JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
-                JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
-                LEFT JOIN article_status ON blog_article.status = article_status.status_value
-				LEFT JOIN users ON blog_article.author = users.id
-				LEFT JOIN article_tree ON article_tree.id = blog_article.article_tree_id
-                WHERE blog_article.valid = 1 AND blog_article.id = ? 
-                GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
-				[Number(articleId)],
-				function (results) {
-					const authHeader = req.headers['authorization'];
-					const token = authHeader && authHeader.split(' ')[1];
-					if (results[0] && token) {
-						if (results[0].standing === E_User_Standing['普通用户']) {
-							jwt.verify(token, jwtKey, (err, user: any) => {
-								if (user.id !== results[0].author) {
-									return res.status(401).json({
-										status: 2,
-										message: 'failed',
-										content: '当前用户不支持查看该未公开的文章',
-									});
-								} else {
-									return res.status(200).json({
-										status: 1,
-										message: 'success',
-										content: results[0],
-									});
-								}
-							});
-						} else if (results[0].standing === E_User_Standing['管理员']) {
-							if ([E_Article_Status['待审'], E_Article_Status['公开'], E_Article_Status['驳回']].includes(results[0].status_value)) {
-								return res.status(200).json({
-									status: 1,
-									message: 'success',
-									content: results[0],
-								});
-							} else {
-								return res.status(401).json({
-									status: 2,
-									message: 'failed',
-									content: '管理员不支持查看该草稿，私有的文章',
-								});
-							}
-						}
-					} else {
+			const authHeader = req.headers['authorization'];
+			const token = (authHeader && authHeader.split(' ')[1]) ?? '';
+			jwt.verify(token, jwtKey, (err, user: any) => {
+				mysqlUTils.query<[number, E_User_Standing, number, E_User_Standing, Array<E_Article_Status>, number], I_Blog_Article[]>(
+					`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.content_html,
+					blog_article.reading_quantity, blog_article.author, blog_article.add_time, blog_article.article_tree_id,
+					article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags,
+					users.standing, users.user_name AS author_name, article_tree.article_tree_name FROM blog_article
+					JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id
+					JOIN article_tags ON article_tag_connection.tag_id = article_tags.id
+					LEFT JOIN article_status ON blog_article.status = article_status.status_value
+					LEFT JOIN users ON blog_article.author = users.id
+					LEFT JOIN article_tree ON article_tree.id = blog_article.article_tree_id
+					WHERE blog_article.valid = 1 AND blog_article.id = ? AND ((users.standing = ? AND blog_article.author = ?) OR (users.standing = ? AND blog_article.status IN (?) AND blog_article.author = ?))
+					GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
+					[
+						Number(articleId),
+						E_User_Standing['普通用户'],
+						user.id,
+						E_User_Standing['管理员'],
+						[E_Article_Status['待审'], E_Article_Status['公开'], E_Article_Status['驳回']],
+						user.id,
+					],
+					function (results) {
 						return res.status(200).json({
 							status: 1,
 							message: 'success',
 							content: results[0],
 						});
 					}
-				}
-			);
+				);
+			});
 		}
 	);
 };
