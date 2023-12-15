@@ -88,7 +88,5 @@ export default ({ app }: { app: Application }) => {
  *                   type: string
  *                   description: success表示成功，failed表示失败
  *                 content:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/BlogBackstageQueryForArticleIdResponse'
+ *                   $ref: '#/components/schemas/BlogBackstageQueryForArticleIdResponse'
  */
