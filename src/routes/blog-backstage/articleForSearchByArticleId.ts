@@ -41,7 +41,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 			const authHeader = req.headers['authorization'];
 			const token = (authHeader && authHeader.split(' ')[1]) ?? '';
 			jwt.verify(token, jwtKey, (err, user: any) => {
-				mysqlUTils.query<[number, E_User_Standing, number, E_User_Standing, Array<E_Article_Status>, number], I_Blog_Article[]>(
+				mysqlUTils.query<[number, E_User_Standing, number, E_User_Standing, Array<E_Article_Status>], I_Blog_Article[]>(
 					`SELECT blog_article.id, blog_article.title, blog_article.content, blog_article.content_html,
 					blog_article.reading_quantity, blog_article.author, blog_article.add_time, blog_article.article_tree_id,
 					article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags,
@@ -51,7 +51,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 					LEFT JOIN article_status ON blog_article.status = article_status.status_value
 					LEFT JOIN users ON blog_article.author = users.id
 					LEFT JOIN article_tree ON article_tree.id = blog_article.article_tree_id
-					WHERE blog_article.valid = 1 AND blog_article.id = ? AND ((users.standing = ? AND blog_article.author = ?) OR (users.standing = ? AND blog_article.status IN (?) AND blog_article.author = ?))
+					WHERE blog_article.valid = 1 AND blog_article.id = ? AND ((users.standing = ? AND blog_article.author = ?) OR (users.standing = ? AND blog_article.status IN (?)))
 					GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
 					[
 						Number(articleId),
@@ -59,7 +59,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 						user.id,
 						E_User_Standing['管理员'],
 						[E_Article_Status['待审'], E_Article_Status['公开'], E_Article_Status['驳回']],
-						user.id,
 					],
 					function (results) {
 						return res.status(200).json({
