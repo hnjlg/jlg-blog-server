@@ -27,7 +27,7 @@ export default ({ app }: { app: Application }) => {
 				if (results && results[0].count > 0) {
 					return res.status(401).json({
 						status: 2,
-						message: 'failed',
+						message: '用户名已被注册使用',
 						content: results,
 					});
 				} else {

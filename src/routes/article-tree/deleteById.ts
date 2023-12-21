@@ -22,7 +22,7 @@ export default ({ app }: { app: Application }) => {
 				if (results && results[0].count > 0) {
 					return res.status(401).json({
 						status: 1,
-						message: 'failed',
+						message: '文章目录下有还有文章，不允许删除',
 						content: results,
 					});
 				} else {
@@ -38,7 +38,7 @@ export default ({ app }: { app: Application }) => {
 						if (results && results[0].count > 0) {
 							return res.status(401).json({
 								status: 1,
-								message: 'failed',
+								message: '文章目录下有还有文章，不允许删除',
 								content: results,
 							});
 						} else {

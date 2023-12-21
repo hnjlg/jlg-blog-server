@@ -39,7 +39,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 							},
 						});
 					} else {
-						res.status(401).json({ status: 1, message: 'failed', content: '登录失败' });
+						res.status(401).json({ status: 1, message: '账号或密码错误', content: null });
 					}
 				}
 			);
@@ -76,7 +76,5 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *                   type: string
  *                   description: success表示成功，failed表示失败
  *                 content:
- *                   type: array
- *                   items:
  *                     $ref: '#/components/schemas/UserLoginResponse'
  */

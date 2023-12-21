@@ -36,7 +36,7 @@ export default ({ app }: { app: Application }) => {
 				} else {
 					return res.status(401).json({
 						status: 1,
-						message: 'failed',
+						message: '用户id不存在',
 						content: results,
 					});
 				}

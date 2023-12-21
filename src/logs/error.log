@@ -4,3 +4,7 @@ Error: You have an error in your SQL syntax; check the manual that corresponds t
 Error: Unknown column 'article_tags.id' in 'where clause'
 Error: Unknown column 'article_tags.id' in 'where clause'
 Error: Unknown column 'blog_article' in 'field list'
+Error: Unknown column 'users.user_name' in 'field list'
+Error: Unknown column 'users.user_name' in 'field list'
+Error: Unknown column 'users.user_name' in 'field list'
+Error: Unknown column 'users.user_name' in 'field list'

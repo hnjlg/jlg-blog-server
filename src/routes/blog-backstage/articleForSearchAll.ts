@@ -62,11 +62,14 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 							);
 						} else {
 							mysqlUTils.query<[number, number, number], []>(
-								`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, 
+								`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, 
+								blog_article.add_time, article_status.status_name, article_status.status_value,
+								blog_article.author, users.user_name as author_name, 
 								GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
 								JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
 								JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
-								LEFT JOIN article_status ON blog_article.status = article_status.status_value 
+								LEFT JOIN article_status ON blog_article.status = article_status.status_value
+								LEFT JOIN users ON blog_article.author = users.id 
 								WHERE blog_article.valid = 1 AND blog_article.author = ?
 								GROUP BY blog_article.id 
 								LIMIT ? OFFSET ?;`,

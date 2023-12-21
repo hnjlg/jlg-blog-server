@@ -5,6 +5,8 @@ import userRouter from './user';
 import blogRouter from './blog';
 import blogBackstage from './blog-backstage';
 import articleTreeRouter from './article-tree';
+import articleTagsRouter from './article-tags';
+import routerConfigRouter from './router-config';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	generateFksPageTemplateRouter({ app });
@@ -18,12 +20,63 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	blogBackstage({ app, jwtKey });
 
 	articleTreeRouter({ app });
+
+	articleTagsRouter({ app });
+
+	routerConfigRouter({ app, jwtKey });
 };
 
 /**
  * @swagger
  * components:
  *   schemas:
+ *     RouterMeta:
+ *       type: object
+ *       properties:
+ *         keepAlive:
+ *           type: boolean
+ *           description: 是否缓存路由组件
+ *         systemPage:
+ *           type: boolean
+ *           description: 是否是系统业务页面
+ *         title:
+ *           type: string
+ *           description: 页面标题
+ *     RouterConfigUserRouterQueryResponse:
+ *       type: object
+ *       properties:
+ *         path:
+ *           type: string
+ *           description: 路由路径
+ *         componentName:
+ *           type: string
+ *           description: 路由组件名
+ *         meta:
+ *           $ref: '#/components/schemas/RouterMeta'
+ *         name:
+ *           type: string
+ *           description: 路由Name
+ *     ArticleTagsTagsQueryResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: 标签id
+ *         tag_name:
+ *           type: string
+ *           description: 标签名称
+ *     ArticleTagsTagsQueryRequest:
+ *       type: object
+ *       properties:
+ *         pageIndex:
+ *           type: integer
+ *           description: 要获取的页数
+ *         pageSize:
+ *           type: integer
+ *           description: 每页显示的标签数量
+ *         tagName:
+ *           type: string
+ *           description: 标签名tagName查询
  *     UserQueryAllResponse:
  *       type: object
  *       properties:
@@ -66,10 +119,10 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         token:
  *           type: string
  *           description: 用户token
- *         userName:
+ *         user_name:
  *           type: string
  *           description: 用户名
- *         userCode:
+ *         user_code:
  *           type: string
  *           description: 用户Code
  *     UserLoginRequest:
@@ -242,6 +295,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *           type: string
  *           format: date-time
  *           description: 文章发布时间
+ *         content:
+ *           type: string
+ *           description: 文章的内容
+ *         content_html:
+ *           type: string
+ *           description: 文章的内容（包含html标签元素）
  *         tags:
  *           type: string
  *           description: 文章标签
