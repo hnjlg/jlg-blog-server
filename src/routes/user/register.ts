@@ -2,9 +2,9 @@ import { Application } from 'express';
 import { body } from 'express-validator';
 import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
-import { I_User } from '../../types/users';
 import dayjs from 'dayjs';
 import CryptoJS from 'crypto-js';
+import { I_MySQLResult } from '../../types/mysqlResult';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
@@ -23,7 +23,7 @@ export default ({ app }: { app: Application }) => {
 		],
 		(req: Request, res: Response) => {
 			const { userName, passWord } = req.body;
-			mysqlUTils.query<[string], [{ count: number }]>('SELECT COUNT(*) as count FROM users WHERE user_name = ?', [userName], function (results) {
+			mysqlUTils.query<[string], [{ count: number }]>('SELECT COUNT(*) AS count FROM users WHERE user_name = ?', [userName], function (results) {
 				if (results && results[0].count > 0) {
 					return res.status(401).json({
 						status: 2,
@@ -31,7 +31,7 @@ export default ({ app }: { app: Application }) => {
 						content: results,
 					});
 				} else {
-					mysqlUTils.query<[string, string, string], I_User[]>(
+					mysqlUTils.query<[string, string, string], I_MySQLResult>(
 						'INSERT INTO users(user_name,pass_word,user_code) values (?,?,?);',
 						[userName, CryptoJS.SHA256(passWord).toString(), 'U' + dayjs().format('YYYYMMDDHHmmss')],
 						function (results) {

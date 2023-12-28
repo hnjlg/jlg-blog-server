@@ -1,6 +1,7 @@
 import { Application, Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { body, validationResult } from 'express-validator';
+import { T_Article_Tree } from '../../types/articleTree';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
@@ -22,7 +23,7 @@ export default ({ app }: { app: Application }) => {
 			}
 			const { pageSize, pageIndex, articleTreeName } = req.body;
 
-			mysqlUTils.query<[string, number, number] | [number, number], []>(
+			mysqlUTils.query<[string, number, number] | [number, number], T_Article_Tree>(
 				`SELECT id, article_tree_name, parent_article_tree_id from article_tree ${
 					articleTreeName !== undefined ? 'WHERE article_tree_name LIKE ?' : ''
 				} LIMIT ? OFFSET ?;`,
@@ -35,7 +36,15 @@ export default ({ app }: { app: Application }) => {
 							return res.status(200).json({
 								status: 1,
 								message: 'success',
-								content: { arr: results, total: resultsTotal[0].total },
+								content: {
+									arr: results.map((item) => {
+										if (item.parent_article_tree_id === null) {
+											item.parent_article_tree_id = 0;
+										}
+										return item;
+									}),
+									total: resultsTotal[0].total,
+								},
 							});
 						}
 					);
@@ -82,5 +91,5 @@ export default ({ app }: { app: Application }) => {
  *                     arr:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/MySQLResult'
+ *                         $ref: '#/components/schemas/ArticleTreeArticleTreeNameQueryResponse'
  */

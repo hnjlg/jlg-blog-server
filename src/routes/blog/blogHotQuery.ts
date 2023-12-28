@@ -14,9 +14,12 @@ export default ({ app }: { app: Application }) => {
 			}
 			const { limit } = req.query;
 			mysqlUTils.query<[number, number], []>(
-				`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time, GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
+				`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time, 
+				blog_article.author, users.user_name AS author_name,
+				GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
 				JOIN article_tag_connection ON blog_article.id = article_tag_connection.article_id 
-				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
+				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id
+				LEFT JOIN users ON blog_article.author = users.id
 				WHERE blog_article.valid = 1 AND blog_article.status = ?
 				GROUP BY blog_article.id ORDER BY reading_quantity DESC LIMIT ?`,
 				[E_Article_Status['公开'], Number(limit)],

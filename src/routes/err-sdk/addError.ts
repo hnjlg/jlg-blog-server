@@ -1,6 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import { Application, Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
+import { I_MySQLResult } from '../../types/mysqlResult';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
@@ -23,7 +24,7 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			mysqlUTils.query<[string, string, string], []>(
+			mysqlUTils.query<[string, string, string], I_MySQLResult>(
 				'INSERT INTO `errors`(type_value,user_code,error_content) VALUES(?,?,?);',
 				[typeValue, userCode, errorContent],
 				function (results) {

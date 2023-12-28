@@ -35,6 +35,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 								id: results[0].id,
 								user_name: results[0].user_name,
 								user_code: results[0].user_code,
+								standing: results[0].standing,
 								token,
 							},
 						});

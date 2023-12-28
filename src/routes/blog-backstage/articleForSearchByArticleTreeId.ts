@@ -5,7 +5,7 @@ import { body, validationResult } from 'express-validator';
 export default ({ app }: { app: Application }) => {
 	app.post(
 		'/blog-backstage/article/query/for/articleTreeId',
-		[body('articleTreeId').notEmpty().withMessage('articleTreeId cannot be empty').isInt().withMessage('articleTreeId must be a number')],
+		[body('article_tree_id').notEmpty().withMessage('article_tree_id cannot be empty').isInt().withMessage('article_tree_id must be a number')],
 		(req: Request, res: Response) => {
 			const result = validationResult(req);
 
@@ -17,7 +17,7 @@ export default ({ app }: { app: Application }) => {
 				});
 			}
 
-			const { articleTreeId } = req.body;
+			const { article_tree_id } = req.body;
 			mysqlUTils.query<[number], []>(
 				`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value, GROUP_CONCAT(article_tags.tag_name) AS tags 
                 FROM blog_article 
@@ -26,7 +26,7 @@ export default ({ app }: { app: Application }) => {
                 LEFT JOIN article_status ON blog_article.status = article_status.status_value 
                 WHERE blog_article.valid = 1 AND blog_article.article_tree_id = ? 
                 GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value;`,
-				[Number(articleTreeId)],
+				[Number(article_tree_id)],
 				function (results) {
 					return res.status(200).json({
 						status: 1,

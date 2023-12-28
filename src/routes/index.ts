@@ -7,6 +7,7 @@ import blogBackstage from './blog-backstage';
 import articleTreeRouter from './article-tree';
 import articleTagsRouter from './article-tags';
 import routerConfigRouter from './router-config';
+import fileRouter from './file';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	generateFksPageTemplateRouter({ app });
@@ -24,12 +25,98 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	articleTagsRouter({ app });
 
 	routerConfigRouter({ app, jwtKey });
+
+	fileRouter({ app });
 };
 
 /**
  * @swagger
  * components:
  *   schemas:
+ *     FileUploadRequest:
+ *       type: object
+ *       properties:
+ *         file:
+ *           type: string
+ *           format: binary
+ *           description: 文件流
+ *     FileUploadResult:
+ *       type: object
+ *       properties:
+ *         fieldname:
+ *           type: string
+ *           description: 字段名
+ *         originalname:
+ *           type: string
+ *           description: 上传文件名
+ *         encoding:
+ *           type: string
+ *           description: 文件编码
+ *         mimetype:
+ *           type: string
+ *           description: 文件类型
+ *         destination:
+ *           type: string
+ *           description: 保存路径
+ *         filename:
+ *           type: string
+ *           description: 保存文件名
+ *         path:
+ *           type: string
+ *           description: 保存文件路径
+ *         size:
+ *           type: integer
+ *           description: 文件大小
+ *     BlogBackstageArticleDraftTurnWaitReviewRequest:
+ *       type: object
+ *       properties:
+ *         articleId:
+ *           type: integer
+ *           description: 文章id
+ *     UserStanding:
+ *       type: integer
+ *       format: int32
+ *       description: 1=普通用户2=管理员
+ *       enum: [1,2]
+ *       x-enumNames: [普通用户,管理员]
+ *     ArticleStatus:
+ *       type: integer
+ *       format: int32
+ *       description: 1=草稿2=待审3=公开4=私有5=驳回
+ *       enum: [1,2,3,4,5]
+ *       x-enumNames: [草稿,待审,公开,私有,驳回]
+ *     SelectListItem:
+ *       type: object
+ *       properties:
+ *         label:
+ *           type: string
+ *           description: 文本
+ *         value:
+ *           type: integer
+ *           description: 值
+ *     BlogBackstageArticleEditRequest:
+ *       type: object
+ *       properties:
+ *         articleId:
+ *           type: integer
+ *           description: 编辑文章的id
+ *         title:
+ *           type: string
+ *           description: 编辑文章的标题
+ *         content:
+ *           type: string
+ *           description: 编辑文章的内容
+ *         content_html:
+ *           type: string
+ *           description: 编辑文章的内容（包含html标签元素）
+ *         article_tree_id:
+ *           type: integer
+ *           description: 文章树id
+ *         articleTags:
+ *           type: array
+ *           description: 文章标签列表
+ *           items:
+ *             type: integer
  *     RouterMeta:
  *       type: object
  *       properties:
@@ -99,8 +186,8 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *           type: string
  *           description: 用户类型名称
  *         standing_value:
- *           type: integer
- *           description: 用户类型的值
+ *           $ref: '#/components/schemas/UserStanding'
+ *           description: 用户类型值
  *     UserQueryAllRequest:
  *       type: object
  *       properties:
@@ -125,6 +212,9 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         user_code:
  *           type: string
  *           description: 用户Code
+ *         standing:
+ *           $ref: '#/components/schemas/UserStanding'
+ *           description: 用户身份
  *     UserLoginRequest:
  *       type: object
  *       properties:
@@ -207,6 +297,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
+ *         author:
+ *           type: integer
+ *           description: 作者id
+ *         author_name:
+ *           type: string
+ *           description: 作者名
  *         add_time:
  *           type: string
  *           format: date-time
@@ -232,6 +328,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         reading_quantity:
  *           type: integer
  *           description: 文章阅读量
+ *         author:
+ *           type: integer
+ *           description: 作者id
+ *         author_name:
+ *           type: string
+ *           description: 作者名称
  *         add_time:
  *           type: string
  *           format: date-time
@@ -273,7 +375,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *     BlogQueryForArticleIdRequest:
  *       type: object
  *       properties:
- *         articleTreeId:
+ *         article_tree_id:
  *           type: integer
  *           description: 文章树id
  *     BlogBackstageQueryForArticleIdResponse:
@@ -291,6 +393,9 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         author:
  *           type: integer
  *           description: 作者id
+ *         author_name:
+ *           type: string
+ *           description: 作者名称
  *         add_time:
  *           type: string
  *           format: date-time
@@ -322,9 +427,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         content_html:
  *           type: string
  *           description: 新增文章的内容（包含html标签元素）
- *         author:
- *           type: integer
- *           description: 用户id
  *         article_tree_id:
  *           type: integer
  *           description: 文章树id
@@ -359,13 +461,10 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         content:
  *           type: string
  *           description: 新增文章的内容
- *         contentHTML:
+ *         content_html:
  *           type: string
  *           description: 新增文章的内容（包含html标签元素）
- *         author:
- *           type: integer
- *           description: 用户id
- *         articleTreeId:
+ *         article_tree_id:
  *           type: integer
  *           description: 文章树id
  *         articleTags:
@@ -431,7 +530,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *     BlogBackstageArticleQueryForArticleTreeIdRequest:
  *       type: object
  *       properties:
- *         articleTreeId:
+ *         article_tree_id:
  *           type: integer
  *           description: 文章树id
  *     BlogBackstageArticleQueryForArticleResponse:
@@ -462,9 +561,17 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *           type: string
  *           format: date-time
  *           description: 文章发布时间
- *         tags:
+ *         tag_names:
  *           type: string
- *           description: 文章标签
+ *           description: 文章标签拼接
+ *         tag_ids:
+ *           type: string
+ *           description: 文章标签id拼接
+ *         tags:
+ *           type: array
+ *           description: 文章标签列表
+ *           items:
+ *             $ref: '#/components/schemas/SelectListItem'
  *         article_tree_id:
  *           type: integer
  *           description: 文章所属目录id
@@ -500,7 +607,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *           type: string
  *           description: 状态名称
  *         status_value:
- *           type: integer
+ *           $ref: '#/components/schemas/ArticleStatus'
  *           description: 状态值
  *         author:
  *           type: integer
@@ -517,6 +624,18 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         pageSize:
  *           type: integer
  *           description: 每页显示的文章数量
+ *     ArticleTreeArticleTreeNameQueryResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: 文章树id
+ *         article_tree_name:
+ *           type: string
+ *           description: 文章树名称
+ *         parent_article_tree_id:
+ *           type: integer
+ *           description: 父级文章树id
  *     ArticleTreeArticleTreeNameQueryRequest:
  *       type: object
  *       properties:
@@ -532,7 +651,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *     ArticleTreeByIdDeleteRequest:
  *       type: object
  *       properties:
- *         articleTreeId:
+ *         article_tree_id:
  *           type: integer
  *           description: 文章树id
  *     UserRegisterRequest:

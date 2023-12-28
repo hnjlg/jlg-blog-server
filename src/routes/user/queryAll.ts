@@ -22,7 +22,7 @@ export default ({ app }: { app: Application }) => {
 
 			const { pageSize, pageIndex } = req.body;
 			mysqlUTils.query<[number, number], []>(
-				`SELECT users.id, users.user_name, users.pass_word, users.user_code, user_standing.id as user_standing_id, user_standing.standing_name, user_standing.standing_value FROM users
+				`SELECT users.id, users.user_name, users.pass_word, users.user_code, user_standing.id AS user_standing_id, user_standing.standing_name, user_standing.standing_value FROM users
 				LEFT JOIN user_standing ON users.standing = user_standing.standing_value 
 				WHERE users.valid = 1
 				GROUP BY users.id 

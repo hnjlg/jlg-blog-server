@@ -9,16 +9,22 @@ import articleForSearchAll from './articleForSearchAll';
 import articleForSearchByUserID from './articleForSearchByUserID';
 import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId';
 import articleForSearchByArticleId from './articleForSearchByArticleId';
+import articleSubmittedForEdit from './articleSubmittedForEdit';
+import articleStatusForSearchAll from './articleStatusForSearchAll';
+import articleSubmittedForDraftTurnWaitReview from './articleSubmittedForDraftTurnWaitReview';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
-	articleSubmittedForDraft({ app });
-	articleSubmittedForWaitReview({ app });
-	articleSubmittedForReview({ app });
-	articleSubmittedForReject({ app });
-	articleSubmittedForTakeback({ app });
-	articleSubmittedForDelete({ app });
+	articleSubmittedForDraft({ app, jwtKey });
+	articleSubmittedForWaitReview({ app, jwtKey });
+	articleSubmittedForReview({ app, jwtKey });
+	articleSubmittedForReject({ app, jwtKey });
+	articleSubmittedForTakeback({ app, jwtKey });
+	articleSubmittedForDelete({ app, jwtKey });
 	articleForSearchAll({ app, jwtKey });
 	articleForSearchByUserID({ app });
 	articleForSearchByArticleTreeId({ app });
 	articleForSearchByArticleId({ app, jwtKey });
+	articleSubmittedForEdit({ app });
+	articleStatusForSearchAll({ app });
+	articleSubmittedForDraftTurnWaitReview({ app, jwtKey });
 };
