@@ -4,7 +4,7 @@ import multer from 'multer';
 
 // 设置存储位置和文件名
 const storage = multer.diskStorage({
-	destination: './public/_upload', // 指定上传文件的存储路径
+	destination: './public', // 指定上传文件的存储路径
 	filename: (req, file, callback) => {
 		callback(null, new Date().getTime() + '-' + file.originalname);
 	},

@@ -10,6 +10,7 @@ import jwtConfig from './config/jwt';
 import requestLog from './config/requestLog';
 import bodyParams from './config/bodyParams';
 import dotenv from './config/dotenv';
+import socketInit from './socket/index';
 
 dotenv();
 
@@ -57,7 +58,9 @@ const { jwtKey } = jwtConfig({ app });
 
 routers({ app, jwtKey });
 
+const server = socketInit({ app, jwtKey });
+
 // 启动服务器
-app.listen(port, function () {
+server.listen(port, function () {
 	console.log(`Server running at http://localhost:${port}/`);
 });

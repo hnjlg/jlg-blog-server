@@ -9,8 +9,7 @@ export default ({ app }: { app: Application }): { jwtKey: string } => {
 		if (['/user/login', '/user/register'].includes(req.path) || req.path.startsWith('/download/') || req.path.startsWith('/blog/')) {
 			next();
 		} else {
-			const authHeader = req.headers['authorization'];
-			const token = authHeader && authHeader.split(' ')[1];
+			const token = req.headers['authorization'];
 			if (token == null) return res.sendStatus(401);
 			jwt.verify(token, jwtKey, (err) => {
 				if (err) return res.sendStatus(403);

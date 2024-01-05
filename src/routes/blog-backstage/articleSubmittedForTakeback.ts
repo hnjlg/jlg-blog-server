@@ -15,8 +15,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 				return res.status(400).json({ status: 2, message: 'failed', content: errors.array() });
 			}
 			const { articleId } = req.body;
-			const authHeader = req.headers['authorization'];
-			const token = authHeader && authHeader.split(' ')[1];
+			const token = req.headers['authorization'];
 			if (token) {
 				jwt.verify(token, jwtKey, (err, user: any) => {
 					mysqlUTils.query<[number, E_Article_Status], [{ author: number }]>(

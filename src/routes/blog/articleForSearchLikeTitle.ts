@@ -1,6 +1,7 @@
 import { Application, Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { body, validationResult } from 'express-validator';
+import { E_Article_Status } from '../../types/articleStatus';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
@@ -22,7 +23,7 @@ export default ({ app }: { app: Application }) => {
 			}
 
 			const { pageSize, pageIndex, title } = req.body;
-			mysqlUTils.query<[string, number, number], []>(
+			mysqlUTils.query<[string, E_Article_Status, number, number], []>(
 				`SELECT blog_article.id, blog_article.title, blog_article.reading_quantity, blog_article.add_time,
 				blog_article.author, article_status.status_name, article_status.status_value, users.user_name AS author_name, 
 				GROUP_CONCAT(article_tags.tag_name) AS tags FROM blog_article 
@@ -30,15 +31,15 @@ export default ({ app }: { app: Application }) => {
 				JOIN article_tags ON article_tag_connection.tag_id = article_tags.id 
 				LEFT JOIN article_status ON blog_article.status = article_status.status_value
 				LEFT JOIN users ON blog_article.author = users.id 
-				WHERE blog_article.valid = 1 AND blog_article.title LIKE ?
+				WHERE blog_article.valid = 1 AND blog_article.title LIKE ? AND blog_article.status = ?
 				GROUP BY blog_article.id 
 				LIMIT ? OFFSET ?;`,
-				[`%${title}%`, Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
+				[`%${title}%`, E_Article_Status['公开'], Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {
-					mysqlUTils.query<[string], [{ total: number }]>(
+					mysqlUTils.query<[string, E_Article_Status], [{ total: number }]>(
 						`SELECT COUNT(*) AS total FROM blog_article 
-						WHERE blog_article.valid = 1 AND blog_article.title LIKE ?;`,
-						[`%${title}%`],
+						WHERE blog_article.valid = 1 AND blog_article.title LIKE ? AND blog_article.status = ?;`,
+						[`%${title}%`, E_Article_Status['公开']],
 						function (resultsTotal) {
 							return res.status(200).json({
 								status: 1,

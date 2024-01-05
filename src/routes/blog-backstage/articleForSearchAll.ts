@@ -23,8 +23,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 				});
 			}
 			const { pageSize, pageIndex } = req.body;
-			const authHeader = req.headers['authorization'];
-			const token = authHeader && authHeader.split(' ')[1];
+			const token = req.headers['authorization'];
 			if (token) {
 				jwt.verify(token, jwtKey, (err, user: any) => {
 					mysqlUTils.query<[number], [I_User]>(`SELECT * FROM users WHERE id = ?`, [user.id], function (findUser) {
