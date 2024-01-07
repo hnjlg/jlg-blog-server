@@ -12,14 +12,20 @@ export declare interface I_Option {
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 }
 
-export const socketSet = new Map();
+export const socketOption: {
+	socketMap: Map<number, I_Option['socket']>;
+	io: webSocket.Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> | null;
+} = {
+	socketMap: new Map(),
+	io: null,
+};
 
 const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	const server = http.createServer(app);
 
 	const io = new webSocket.Server(server);
 
-	io.on('connection', (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) => {
+	io.on('connection', (socket: I_Option['socket']) => {
 		const token = socket.handshake.query.Authorization;
 		if (!token || typeof token !== 'string') {
 			socket.disconnect(true);
@@ -48,7 +54,7 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 						socket.join('admin');
 					}
 
-					socketSet.set(user.id, socket);
+					socketOption.socketMap.set(user.id, socket);
 				} else {
 					socket.disconnect(true);
 					return;

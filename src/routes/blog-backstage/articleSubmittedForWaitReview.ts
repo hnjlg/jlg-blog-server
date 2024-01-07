@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken';
 import { I_MySQLResult } from '../../types/mysqlResult';
 import { E_User_Standing } from '../../types/standing';
 import { sendEmail } from '../../utils/email';
+import { sendNewMessage } from '../../socket/system-msg/sendNewMessage';
+import dayjs from 'dayjs';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -68,8 +70,8 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 															[],
 															function () {
 																// 邮件通知所有的管理员
-																mysqlUTils.query<[E_User_Standing], { email: string }[]>(
-																	`SELECT email FROM users WHERE valid = 1 AND standing = ?`,
+																mysqlUTils.query<[E_User_Standing], { id: number; email: string; standing: E_User_Standing }[]>(
+																	`SELECT id, email, standing FROM users WHERE valid = 1 AND standing = ?`,
 																	[E_User_Standing['管理员']],
 																	function (users) {
 																		users.forEach((user) => {
@@ -81,6 +83,13 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 																					html: `<strong>文章<ins>《${title}》</ins>待审核</strong>`,
 																				});
 																			}
+																			sendNewMessage(user.id, user.standing, {
+																				id: 44444444,
+																				title: '文章待审核',
+																				content: `文章《${title}》待审核`,
+																				sendTime: dayjs().format(),
+																				isRead: false,
+																			});
 																		});
 																	}
 																);

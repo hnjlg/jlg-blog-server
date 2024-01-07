@@ -7,6 +7,8 @@ import { E_User_Standing } from '../../types/standing';
 import { I_User } from '../../types/users';
 import { I_MySQLResult } from '../../types/mysqlResult';
 import { sendEmail } from '../../utils/email';
+import { sendNewMessage } from '../../socket/system-msg/sendNewMessage';
+import dayjs from 'dayjs';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -34,8 +36,8 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 											[E_Article_Status['公开'], Number(articleId), [E_Article_Status['待审'], E_Article_Status['驳回']]],
 											function (results) {
 												// 邮件通知对应作者文章审核通过
-												mysqlUTils.query<[number], { email: string }[]>(
-													`SELECT email FROM users WHERE valid = 1 AND id = ?`,
+												mysqlUTils.query<[number], { id: number; email: string; standing: E_User_Standing }[]>(
+													`SELECT id, email, standing FROM users WHERE valid = 1 AND id = ?`,
 													[Number(author)],
 													function (users) {
 														users.forEach((user) => {
@@ -47,6 +49,13 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 																	html: `<strong>文章<ins>《${title}》</ins>审核通过</strong>`,
 																});
 															}
+															sendNewMessage(user.id, user.standing, {
+																id: 3333333,
+																title: '文章审核通过',
+																content: `文章《${title}》审核通过`,
+																sendTime: dayjs().format(),
+																isRead: false,
+															});
 														});
 													}
 												);

@@ -1,15 +1,10 @@
-import { socketSet } from '..';
+import { socketOption } from '..';
+import { E_User_Standing } from '../../types/standing';
 
-let i = 0;
-
-export const sendNewMessage = (userId: number) => {
-	console.log(userId, 'userId', socketSet.get(userId));
-	// option.io?.to('admin').emit('resNewMessage', { test: '管理员房间测试' });
-	socketSet.get(userId)?.emit('resNewMessage', {
-		id: i++,
-		title: 'title' + i,
-		content: 'content' + i,
-		sendTime: '2022-01-01 00:00:00',
-		isRead: false,
-	});
+export const sendNewMessage = <T = any>(userId: number, standing: E_User_Standing, msg: T) => {
+	if (standing === E_User_Standing['普通用户']) {
+		socketOption.socketMap.get(userId)?.emit('resNewMessage', msg);
+	} else if (standing === E_User_Standing['管理员']) {
+		socketOption.io?.to('admin').emit('resNewMessage', msg);
+	}
 };
