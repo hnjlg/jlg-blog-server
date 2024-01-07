@@ -1,17 +1,11 @@
-import { I_Option } from '..';
+import { socketSet } from '..';
 
-const option: Partial<I_Option> = {};
+let i = 0;
 
-const init = ({ socket, io }: I_Option) => {
-	option.socket = socket;
-	option.io = io;
-};
-
-let i = 3;
-
-export const sendNewMessage = () => {
+export const sendNewMessage = (userId: number) => {
+	console.log(userId, 'userId', socketSet.get(userId));
 	// option.io?.to('admin').emit('resNewMessage', { test: '管理员房间测试' });
-	option.socket?.emit('resNewMessage', {
+	socketSet.get(userId)?.emit('resNewMessage', {
 		id: i++,
 		title: 'title' + i,
 		content: 'content' + i,
@@ -19,9 +13,3 @@ export const sendNewMessage = () => {
 		isRead: false,
 	});
 };
-
-setInterval(() => {
-	sendNewMessage();
-}, 3000);
-
-export default init;

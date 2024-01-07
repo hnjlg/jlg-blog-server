@@ -12,6 +12,8 @@ export declare interface I_Option {
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 }
 
+export const socketSet = new Map();
+
 const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	const server = http.createServer(app);
 
@@ -45,6 +47,8 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 					if (result[0].standing === E_User_Standing['管理员']) {
 						socket.join('admin');
 					}
+
+					socketSet.set(user.id, socket);
 				} else {
 					socket.disconnect(true);
 					return;
