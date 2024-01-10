@@ -55,6 +55,14 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 					}
 
 					socketOption.socketMap.set(user.id, socket);
+
+					socket.on('reqLoginout', () => {
+						socket.disconnect(true);
+						socketOption.socketMap.delete(user.id);
+						if (result[0].standing === E_User_Standing['管理员']) {
+							socket.leave('admin');
+						}
+					});
 				} else {
 					socket.disconnect(true);
 					return;
@@ -63,6 +71,31 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 		});
 
 		systemMsgSocket({ socket, io });
+
+		setInterval(() => {
+			socket.emit('resRouterChange', [
+				{
+					path: '/blogBackend/BlogArticleAll',
+					componentName: 'BlogArticleAll',
+					meta: {
+						keepAlive: true,
+						systemPage: true,
+						title: '博客后台全部文章页aaaaaa',
+					},
+					name: 'BlogArticleAll',
+				},
+				{
+					path: '/blogBackend/BlogArticleAllMe',
+					componentName: 'BlogArticleAllMe',
+					meta: {
+						keepAlive: true,
+						systemPage: true,
+						title: '我的文章aaaa',
+					},
+					name: 'BlogArticleAllMe',
+				},
+			]);
+		}, 3000);
 	});
 
 	return server;
