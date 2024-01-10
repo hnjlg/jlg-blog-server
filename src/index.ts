@@ -60,6 +60,8 @@ routers({ app, jwtKey });
 
 const server = socketInit({ app, jwtKey });
 
+console.log(process.env);
+
 // 启动服务器
 server.listen(port, function () {
 	console.log(`Server running at ${process.env.SERVER_URL}/`);

@@ -16,5 +16,8 @@
 		"SERVERURL",
 		"takeback",
 		"zedtqujmhmmthddb"
-	]
+	],
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }
