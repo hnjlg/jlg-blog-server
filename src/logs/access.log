@@ -21922,3 +21922,75 @@
 	body:{"pageIndex":1,"pageSize":30}
 	status:200
 }
+{
+	id:2049b122da74226c954b8216cd8ff8e4518f93478e5bc32e5341808fd7fec2dd
+	date:2024/01/10-15:29:49
+	method:POST
+	url:/login
+	query:{}
+	body:{"username":"jlgFks","password":"20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"}
+	status:403
+}
+{
+	id:04771ee8ef0879f242cbe440a25e7a80cbc012e5e94cb02105305b42a1831691
+	date:2024/01/10-15:31:56
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:e1354c2ee194c395e39fd333afdc2a593a714137b050f24566efbebbe6e6d26c
+	date:2024/01/10-15:33:12
+	method:POST
+	url:/login
+	query:{}
+	body:{"username":"jlgFks","password":"20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"}
+	status:403
+}
+{
+	id:0052639f4da7780d9c3f951fc17a3d9255451e12747b7ab8f8fb3591bcfbbf84
+	date:2024/01/10-15:33:26
+	method:POST
+	url:/login
+	query:{}
+	body:{"username":"jlgFks","password":"20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"}
+	status:403
+}
+{
+	id:3efc9f1d8f7398b25d75acafc8ad63b50458821cff5b3e5200fe36ad704143c6
+	date:2024/01/10-15:38:59
+	method:POST
+	url:/login
+	query:{}
+	body:{"username":"jlgFks","password":"20f645c703944a0027acf6fad92ec465247842450605c5406b50676ff0dcd5ea"}
+	status:403
+}
+{
+	id:844c1586664c4481cc8a34e34ec97b1b25e2079d2722efa155c363c88f3cf5c5
+	date:2024/01/10-16:07:15
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:a2d9515a98a14b8d434ade8b6ba44a617eccd2c64e1ac79b77d6196f721f4119
+	date:2024/01/10-16:08:01
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:304
+}
+{
+	id:83d3e924561ecf8a4007aefad4571205e7cfb18eb15b7001faa4dba8efd91a9e
+	date:2024/01/10-16:08:48
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}

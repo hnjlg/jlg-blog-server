@@ -62,5 +62,5 @@ const server = socketInit({ app, jwtKey });
 
 // 启动服务器
 server.listen(port, function () {
-	console.log(`Server running at http://localhost:${port}/`);
+	console.log(`Server running at ${process.env.SERVER_URL}/`);
 });
