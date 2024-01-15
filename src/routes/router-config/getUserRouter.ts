@@ -15,23 +15,23 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 							status: 1,
 							message: 'success',
 							content: [
-								{
-									path: '/blogBackend/BlogBackendPublish',
-									componentName: 'BlogBackendPublish',
-									meta: {
-										keepAlive: true,
-										systemPage: true,
-										title: '博客后台发布页',
-									},
-									name: 'BlogBackendPublish',
-								},
+								// {
+								// 	path: '/blogBackend/BlogBackendPublish',
+								// 	componentName: 'BlogBackendPublish',
+								// 	meta: {
+								// 		keepAlive: true,
+								// 		systemPage: true,
+								// 		title: '博客后台发布页',
+								// 	},
+								// 	name: 'BlogBackendPublish',
+								// },
 								{
 									path: '/blogBackend/BlogArticleAll',
 									componentName: 'BlogArticleAll',
 									meta: {
 										keepAlive: true,
 										systemPage: true,
-										title: '博客后台全部文章页',
+										title: '全部文章',
 									},
 									name: 'BlogArticleAll',
 								},
@@ -45,6 +45,16 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 									},
 									name: 'BlogArticleAllMe',
 								},
+								{
+									path: '/blogBackend/UserManagement',
+									componentName: 'UserManagement',
+									meta: {
+										keepAlive: true,
+										systemPage: true,
+										title: '用户管理',
+									},
+									name: 'UserManagement',
+								},
 							],
 						});
 					} else {
@@ -52,16 +62,16 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 							status: 1,
 							message: 'success',
 							content: [
-								{
-									path: '/blogBackend/BlogBackendPublish',
-									componentName: 'BlogBackendPublish',
-									meta: {
-										keepAlive: true,
-										systemPage: true,
-										title: '博客后台发布页',
-									},
-									name: 'BlogBackendPublish',
-								},
+								// {
+								// 	path: '/blogBackend/BlogBackendPublish',
+								// 	componentName: 'BlogBackendPublish',
+								// 	meta: {
+								// 		keepAlive: true,
+								// 		systemPage: true,
+								// 		title: '博客后台发布页',
+								// 	},
+								// 	name: 'BlogBackendPublish',
+								// },
 								{
 									path: '/blogBackend/BlogArticleAllMe',
 									componentName: 'BlogArticleAllMe',

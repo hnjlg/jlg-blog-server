@@ -72,30 +72,30 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 
 		systemMsgSocket({ socket, io });
 
-		setInterval(() => {
-			socket.emit('resRouterChange', [
-				{
-					path: '/blogBackend/BlogArticleAll',
-					componentName: 'BlogArticleAll',
-					meta: {
-						keepAlive: true,
-						systemPage: true,
-						title: '博客后台全部文章页aaaaaa',
-					},
-					name: 'BlogArticleAll',
-				},
-				{
-					path: '/blogBackend/BlogArticleAllMe',
-					componentName: 'BlogArticleAllMe',
-					meta: {
-						keepAlive: true,
-						systemPage: true,
-						title: '我的文章aaaa',
-					},
-					name: 'BlogArticleAllMe',
-				},
-			]);
-		}, 3000);
+		// setInterval(() => {
+		// 	socket.emit('resRouterChange', [
+		// 		{
+		// 			path: '/blogBackend/BlogArticleAll',
+		// 			componentName: 'BlogArticleAll',
+		// 			meta: {
+		// 				keepAlive: true,
+		// 				systemPage: true,
+		// 				title: '博客后台全部文章页aaaaaa',
+		// 			},
+		// 			name: 'BlogArticleAll',
+		// 		},
+		// 		{
+		// 			path: '/blogBackend/BlogArticleAllMe',
+		// 			componentName: 'BlogArticleAllMe',
+		// 			meta: {
+		// 				keepAlive: true,
+		// 				systemPage: true,
+		// 				title: '我的文章aaaa',
+		// 			},
+		// 			name: 'BlogArticleAllMe',
+		// 		},
+		// 	]);
+		// }, 3000);
 	});
 
 	return server;
