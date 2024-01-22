@@ -15,45 +15,49 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 							status: 1,
 							message: 'success',
 							content: [
-								// {
-								// 	path: '/blogBackend/BlogBackendPublish',
-								// 	componentName: 'BlogBackendPublish',
-								// 	meta: {
-								// 		keepAlive: true,
-								// 		systemPage: true,
-								// 		title: '博客后台发布页',
-								// 	},
-								// 	name: 'BlogBackendPublish',
-								// },
 								{
-									path: '/blogBackend/BlogArticleAll',
-									componentName: 'BlogArticleAll',
-									meta: {
-										keepAlive: true,
-										systemPage: true,
-										title: '全部文章',
-									},
-									name: 'BlogArticleAll',
+									title: '文章管理',
+									children: [
+										{
+											path: '/blogBackend/BlogArticleAll',
+											componentName: 'BlogArticleAll',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '全部文章',
+											},
+											name: 'BlogArticleAll',
+										},
+										{
+											path: '/blogBackend/BlogArticleAllMe',
+											componentName: 'BlogArticleAllMe',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '我的文章',
+											},
+											name: 'BlogArticleAllMe',
+										},
+									],
 								},
 								{
-									path: '/blogBackend/BlogArticleAllMe',
-									componentName: 'BlogArticleAllMe',
-									meta: {
-										keepAlive: true,
-										systemPage: true,
-										title: '我的文章',
-									},
-									name: 'BlogArticleAllMe',
+									title: '用户管理',
+									children: [
+										{
+											path: '/blogBackend/UserManagement',
+											componentName: 'UserManagement',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '所有用户',
+											},
+											name: 'UserManagement',
+										},
+									],
 								},
 								{
-									path: '/blogBackend/UserManagement',
-									componentName: 'UserManagement',
-									meta: {
-										keepAlive: true,
-										systemPage: true,
-										title: '用户管理',
-									},
-									name: 'UserManagement',
+									title: '其他',
+									children: [],
 								},
 							],
 						});
@@ -62,25 +66,20 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 							status: 1,
 							message: 'success',
 							content: [
-								// {
-								// 	path: '/blogBackend/BlogBackendPublish',
-								// 	componentName: 'BlogBackendPublish',
-								// 	meta: {
-								// 		keepAlive: true,
-								// 		systemPage: true,
-								// 		title: '博客后台发布页',
-								// 	},
-								// 	name: 'BlogBackendPublish',
-								// },
 								{
-									path: '/blogBackend/BlogArticleAllMe',
-									componentName: 'BlogArticleAllMe',
-									meta: {
-										keepAlive: true,
-										systemPage: true,
-										title: '我的文章',
-									},
-									name: 'BlogArticleAllMe',
+									title: '文章管理',
+									children: [
+										{
+											path: '/blogBackend/BlogArticleAllMe',
+											componentName: 'BlogArticleAllMe',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '我的文章',
+											},
+											name: 'BlogArticleAllMe',
+										},
+									],
 								},
 							],
 						});
@@ -116,5 +115,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/RouterConfigUserRouterQueryResponse'
+ *                      type: object
+ *                      properties:
+ *                          title:
+ *                              type: string
+ *                          children:
+ *                              type: array
+ *                              items:
+ *                                $ref: '#/components/schemas/RouterConfigUserRouterQueryResponse'
  */

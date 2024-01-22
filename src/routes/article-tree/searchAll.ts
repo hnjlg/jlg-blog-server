@@ -38,5 +38,5 @@ export default ({ app }: { app: Application }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/MySQLResult'
+ *                     $ref: '#/components/schemas/ArticleTreeTable'
  */
