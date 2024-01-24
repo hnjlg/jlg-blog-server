@@ -1,23 +1,17 @@
 import { I_Option } from '..';
+import jwt from 'jsonwebtoken';
+import mysqlUtils from '../../utils/mysql';
 
-const init = ({ socket }: I_Option) => {
+const init = ({ socket, jwtKey }: I_Option) => {
 	socket.on('reqHistoryMsg', () => {
-		socket.emit('resHistoryMsg', [
-			{
-				id: 1,
-				title: 'title',
-				content: 'content',
-				sendTime: '2022-01-01 00:00:00',
-				isRead: true,
-			},
-			{
-				id: 2,
-				title: 'title2',
-				content: 'content2',
-				sendTime: '2022-01-01 00:00:00',
-				isRead: false,
-			},
-		]);
+		const token = socket.handshake.query.Authorization;
+		if (token) {
+			jwt.verify(token as string, jwtKey, (err, user: any) => {
+				mysqlUtils.query(`SELECT * FROM system_msg WHERE receiver = ?`, [user.id], (msgs) => {
+					socket.emit('resHistoryMsg', msgs);
+				});
+			});
+		}
 	});
 };
 

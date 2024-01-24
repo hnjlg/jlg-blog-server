@@ -8,6 +8,7 @@ import { E_User_Standing } from '../../types/standing';
 import { sendEmail } from '../../utils/email';
 import { sendNewMessage } from '../../socket/system-msg/sendNewMessage';
 import dayjs from 'dayjs';
+import { E_Is_Receive_Email } from '../../types/is_receive_email';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -70,12 +71,15 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 															[],
 															function () {
 																// 邮件通知所有的管理员
-																mysqlUTils.query<[E_User_Standing], { id: number; email: string; standing: E_User_Standing }[]>(
-																	`SELECT id, email, standing FROM users WHERE valid = 1 AND standing = ?`,
+																mysqlUTils.query<
+																	[E_User_Standing],
+																	{ id: number; email: string; standing: E_User_Standing; is_receive_email: E_Is_Receive_Email }[]
+																>(
+																	`SELECT id, email, is_receive_email, standing FROM users WHERE valid = 1 AND standing = ?`,
 																	[E_User_Standing['管理员']],
 																	function (users) {
 																		users.forEach((user) => {
-																			if (user.email) {
+																			if (user.email && user.is_receive_email === E_Is_Receive_Email.接收邮件) {
 																				sendEmail({
 																					to: user.email,
 																					subject: '文章待审核',
@@ -83,13 +87,21 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 																					html: `<strong>文章<ins>《${title}》</ins>待审核</strong>`,
 																				});
 																			}
-																			sendNewMessage(user.id, user.standing, {
-																				id: 44444444,
+																			const msg = {
+																				id: 0,
 																				title: '文章待审核',
 																				content: `文章《${title}》待审核`,
 																				sendTime: dayjs().format(),
 																				isRead: false,
-																			});
+																			};
+																			mysqlUTils.query<[number, string, string], I_MySQLResult>(
+																				`INSERT INTO system_msg (receiver, msg_content, msg_title) VALUES (?, ?, ?)`,
+																				[user.id, msg.content, msg.title],
+																				function (result) {
+																					msg.id = result.insertId;
+																					sendNewMessage(user.id, user.standing, msg);
+																				}
+																			);
 																		});
 																	}
 																);

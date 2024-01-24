@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { I_User } from '../../types/users';
+import CryptoJS from 'crypto-js';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -21,7 +22,8 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 				.withMessage('passWord length must between 5 and 32'),
 		],
 		(req: Request, res: Response) => {
-			const { userName, passWord } = req.body;
+			const { userName } = req.body;
+			const passWord = CryptoJS.SHA256(CryptoJS.AES.decrypt(req.body.passWord, 'blog').toString(CryptoJS.enc.Utf8)).toString();
 			mysqlUTils.query<[string, string], I_User[]>(
 				'SELECT id, user_name, pass_word, user_code, standing FROM users WHERE user_name = ? AND pass_word = ? AND valid = 1;',
 				[userName, passWord],

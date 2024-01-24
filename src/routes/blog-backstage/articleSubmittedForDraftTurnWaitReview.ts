@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import mysqlUTils from '../../utils/mysql';
+import mysqlUtils from '../../utils/mysql';
 import { body, validationResult } from 'express-validator';
 import { E_Article_Status } from '../../types/articleStatus';
 import jwt from 'jsonwebtoken';
@@ -8,6 +8,7 @@ import { sendEmail } from '../../utils/email';
 import { E_User_Standing } from '../../types/standing';
 import { sendNewMessage } from '../../socket/system-msg/sendNewMessage';
 import dayjs from 'dayjs';
+import { E_Is_Receive_Email } from '../../types/is_receive_email';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -22,22 +23,25 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 			const token = req.headers['authorization'];
 			if (token) {
 				jwt.verify(token, jwtKey, (err, user: any) => {
-					mysqlUTils.query<[number, E_Article_Status], [{ title: string; author: number }]>(
-						`SELECT title, author FROM blog_article WHERE id = ? AND blog_article.status = ?;`,
-						[Number(articleId), E_Article_Status['草稿']],
+					mysqlUtils.query<[number, E_Article_Status[]], [{ title: string; author: number }]>(
+						`SELECT title, author FROM blog_article WHERE id = ? AND blog_article.status IN (?);`,
+						[Number(articleId), [E_Article_Status['草稿'], E_Article_Status['私有']]],
 						function (articles) {
 							if (user.id === articles[0].author) {
-								mysqlUTils.query<[E_Article_Status, number, E_Article_Status], I_MySQLResult>(
-									`UPDATE blog_article SET status = ? WHERE id = ? AND blog_article.status = ?;`,
-									[E_Article_Status['待审'], Number(articleId), E_Article_Status['草稿']],
+								mysqlUtils.query<[E_Article_Status, number, E_Article_Status[]], I_MySQLResult>(
+									`UPDATE blog_article SET status = ? WHERE id = ? AND blog_article.status IN (?);`,
+									[E_Article_Status['待审'], Number(articleId), [E_Article_Status['草稿'], E_Article_Status['私有']]],
 									function (results) {
 										// 邮件通知所有的管理员
-										mysqlUTils.query<[E_User_Standing], { id: number; email: string; standing: E_User_Standing }[]>(
-											`SELECT id, email, standing FROM users WHERE valid = 1 AND standing = ?`,
+										mysqlUtils.query<
+											[E_User_Standing],
+											{ id: number; email: string; standing: E_User_Standing; is_receive_email: E_Is_Receive_Email }[]
+										>(
+											`SELECT id, email, standing, is_receive_email FROM users WHERE valid = 1 AND standing = ?`,
 											[E_User_Standing['管理员']],
 											function (users) {
 												users.forEach((user) => {
-													if (user.email) {
+													if (user.email && user.is_receive_email === E_Is_Receive_Email.接收邮件) {
 														sendEmail({
 															to: user.email,
 															subject: '文章待审核',
@@ -45,13 +49,21 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 															html: `<strong>文章<ins>《${articles[0].title}》</ins>待审核</strong>`,
 														});
 													}
-													sendNewMessage(user.id, user.standing, {
-														id: 111111111,
+													const msg = {
+														id: 0,
 														title: '文章待审核',
 														content: `文章《${articles[0].title}》待审核`,
 														sendTime: dayjs().format(),
 														isRead: false,
-													});
+													};
+													mysqlUtils.query<[number, string, string], I_MySQLResult>(
+														`INSERT INTO system_msg (receiver, msg_content, msg_title) VALUES (?, ?, ?)`,
+														[user.id, msg.content, msg.title],
+														function (result) {
+															msg.id = result.insertId;
+															sendNewMessage(user.id, user.standing, msg);
+														}
+													);
 												});
 											}
 										);
@@ -80,7 +92,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *     tags: ['blog-backstage']
  *     summary: 文章提审
  *     description: |
- *       将草稿文章改为待审
+ *       将草稿或者私有文章改为待审
  *     requestBody:
  *       required: true
  *       content:

@@ -10,6 +10,7 @@ import { E_User_Standing } from '../types/standing';
 export declare interface I_Option {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+	jwtKey: string;
 }
 
 export const socketOption: {
@@ -24,6 +25,8 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	const server = http.createServer(app);
 
 	const io = new webSocket.Server(server);
+
+	socketOption.io = io;
 
 	io.on('connection', (socket: I_Option['socket']) => {
 		const token = socket.handshake.query.Authorization;
@@ -70,7 +73,7 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 			});
 		});
 
-		systemMsgSocket({ socket, io });
+		systemMsgSocket({ socket, io, jwtKey });
 
 		// setInterval(() => {
 		// 	socket.emit('resRouterChange', [

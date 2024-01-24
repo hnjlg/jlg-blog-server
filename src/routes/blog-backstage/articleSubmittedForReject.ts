@@ -9,6 +9,7 @@ import { I_MySQLResult } from '../../types/mysqlResult';
 import { sendEmail } from '../../utils/email';
 import { sendNewMessage } from '../../socket/system-msg/sendNewMessage';
 import dayjs from 'dayjs';
+import { E_Is_Receive_Email } from '../../types/is_receive_email';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	app.post(
@@ -44,12 +45,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 											[E_Article_Status['驳回'], Number(articleId), [E_Article_Status['待审'], E_Article_Status['公开']]],
 											function (results) {
 												// 邮件通知对应作者文章审核通过
-												mysqlUTils.query<[number], { id: number; email: string; standing: E_User_Standing }[]>(
-													`SELECT id, email, standing FROM users WHERE valid = 1 AND id = ?`,
+												mysqlUTils.query<[number], { id: number; email: string; standing: E_User_Standing; is_receive_email: E_Is_Receive_Email }[]>(
+													`SELECT id, email, standing, is_receive_email FROM users WHERE valid = 1 AND id = ?`,
 													[Number(author)],
 													function (users) {
 														users.forEach((user) => {
-															if (user.email) {
+															if (user.email && user.is_receive_email === E_Is_Receive_Email.接收邮件) {
 																sendEmail({
 																	to: user.email,
 																	subject: '文章驳回',
@@ -57,13 +58,21 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 																	html: `<strong>文章<ins>《${title}》</ins>驳回</strong>`,
 																});
 															}
-															sendNewMessage(user.id, user.standing, {
-																id: 22222222,
+															const msg = {
+																id: 0,
 																title: '文章驳回',
 																content: `文章《${title}》驳回`,
 																sendTime: dayjs().format(),
 																isRead: false,
-															});
+															};
+															mysqlUTils.query<[number, string, string], I_MySQLResult>(
+																`INSERT INTO system_msg (receiver, msg_content, msg_title) VALUES (?, ?, ?)`,
+																[user.id, msg.content, msg.title],
+																function (result) {
+																	msg.id = result.insertId;
+																	sendNewMessage(user.id, user.standing, msg);
+																}
+															);
 														});
 													}
 												);
