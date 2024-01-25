@@ -1,5 +1,8 @@
 const path = require('path');
 
+// 打包先清理dist
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 module.exports = {
 	entry: './src/index.ts', // 入口文件
 	target: 'node', // 告诉 webpack 打包的代码将在 Node.js 环境中运行
@@ -19,4 +22,5 @@ module.exports = {
 			},
 		],
 	},
+	plugins: [new CleanWebpackPlugin()],
 };
