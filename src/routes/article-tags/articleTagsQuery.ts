@@ -22,7 +22,9 @@ export default ({ app }: { app: Application }) => {
 
 			const { pageSize, pageIndex, tagName } = req.body;
 			mysqlUTils.query<[string, number, number] | [number, number], []>(
-				`SELECT article_tags.id, article_tags.tag_name FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''} LIMIT ? OFFSET ?;`,
+				`SELECT article_tags.id, article_tags.tag_name FROM article_tags WHERE valid = 1 ${
+					tagName !== undefined ? 'AND tag_name LIKE ?' : ''
+				} LIMIT ? OFFSET ?;`,
 				tagName !== undefined ? [`%${tagName}%`, pageSize, (pageIndex - 1) * pageSize] : [pageSize, (pageIndex - 1) * pageSize],
 				function (results) {
 					mysqlUTils.query<[string] | [], [{ total: number }]>(
@@ -47,7 +49,7 @@ export default ({ app }: { app: Application }) => {
  * /article-tags/tags/query:
  *   post:
  *     tags: ['article-tags']
- *     summary: 获取所有文章标签
+ *     summary: 后台获取所有文章标签
  *     description: |
  *       获取所有文章标签，并可根据参数分页查询。
  *     requestBody:

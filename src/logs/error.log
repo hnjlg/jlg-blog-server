@@ -2,3 +2,10 @@ Error: Cannot add or update a child row: a foreign key constraint fails (`expres
 Error: Cannot add or update a child row: a foreign key constraint fails (`express_test`.`blog_article`, CONSTRAINT `blog_article_ibfk_1` FOREIGN KEY (`status`) REFERENCES `article_status` (`status_value`))
 Error: Cannot add or update a child row: a foreign key constraint fails (`express_test`.`blog_article`, CONSTRAINT `blog_article_ibfk_1` FOREIGN KEY (`status`) REFERENCES `article_status` (`status_value`))
 Error: Cannot add or update a child row: a foreign key constraint fails (`express_test`.`blog_article`, CONSTRAINT `blog_article_ibfk_1` FOREIGN KEY (`status`) REFERENCES `article_status` (`status_value`))
+Error: Unknown column 'tagName' in 'where clause'
+Error: Unknown column 'vlid' in 'where clause'
+Error: Unknown column 'vlid' in 'where clause'
+Error: Unknown column 'tagName' in 'where clause'
+Error: Unknown column 'tagName' in 'where clause'
+Error: Unknown column 'tagName' in 'where clause'
+Error: Unknown column 'tagName' in 'where clause'
