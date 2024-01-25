@@ -33,6 +33,15 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  * @swagger
  * components:
  *   schemas:
+ *     RouterQueryResponse:
+ *       type: object
+ *       properties:
+ *           title:
+ *               type: string
+ *           children:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/RouterConfigUserRouterQueryResponse'
  *     FileUploadRequest:
  *       type: object
  *       properties:
