@@ -115,12 +115,5 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *                 content:
  *                   type: array
  *                   items:
- *                      type: object
- *                      properties:
- *                          title:
- *                              type: string
- *                          children:
- *                              type: array
- *                              items:
- *                                $ref: '#/components/schemas/RouterConfigUserRouterQueryResponse'
+ *                     $ref: '#/components/schemas/RouterQueryResponse'
  */
