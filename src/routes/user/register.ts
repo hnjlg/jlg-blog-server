@@ -22,7 +22,10 @@ export default ({ app }: { app: Application }) => {
 				.withMessage('passWord length must between 5 and 32'),
 		],
 		(req: Request, res: Response) => {
-			const { userName, passWord } = req.body;
+			const { userName } = req.body;
+
+			const passWord = CryptoJS.SHA256(CryptoJS.AES.decrypt(req.body.passWord, 'blog').toString(CryptoJS.enc.Utf8)).toString();
+
 			mysqlUTils.query<[string], [{ count: number }]>('SELECT COUNT(*) AS count FROM users WHERE user_name = ?', [userName], function (results) {
 				if (results && results[0].count > 0) {
 					return res.status(401).json({
@@ -33,7 +36,7 @@ export default ({ app }: { app: Application }) => {
 				} else {
 					mysqlUTils.query<[string, string, string], I_MySQLResult>(
 						'INSERT INTO users(user_name,pass_word,user_code) values (?,?,?);',
-						[userName, CryptoJS.SHA256(passWord).toString(), 'U' + dayjs().format('YYYYMMDDHHmmss')],
+						[userName, passWord, 'U' + dayjs().format('YYYYMMDDHHmmss')],
 						function (results) {
 							return res.status(200).json({
 								status: 1,

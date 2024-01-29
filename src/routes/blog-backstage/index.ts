@@ -12,6 +12,7 @@ import articleForSearchByArticleId from './articleForSearchByArticleId';
 import articleSubmittedForEdit from './articleSubmittedForEdit';
 import articleStatusForSearchAll from './articleStatusForSearchAll';
 import articleSubmittedForDraftTurnWaitReview from './articleSubmittedForDraftTurnWaitReview';
+import articleTagsBatchUpdate from './articleTagsBatchUpdate';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	articleSubmittedForDraft({ app, jwtKey });
@@ -27,4 +28,5 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	articleSubmittedForEdit({ app });
 	articleStatusForSearchAll({ app });
 	articleSubmittedForDraftTurnWaitReview({ app, jwtKey });
+	articleTagsBatchUpdate({ app });
 };

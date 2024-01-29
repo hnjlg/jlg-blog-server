@@ -27,7 +27,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 						`SELECT title, author FROM blog_article WHERE id = ? AND blog_article.status IN (?);`,
 						[Number(articleId), [E_Article_Status['草稿'], E_Article_Status['私有']]],
 						function (articles) {
-							if (user.id === articles[0].author) {
+							if (user.id === articles[0]?.author) {
 								mysqlUtils.query<[E_Article_Status, number, E_Article_Status[]], I_MySQLResult>(
 									`UPDATE blog_article SET status = ? WHERE id = ? AND blog_article.status IN (?);`,
 									[E_Article_Status['待审'], Number(articleId), [E_Article_Status['草稿'], E_Article_Status['私有']]],

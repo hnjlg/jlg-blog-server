@@ -56,6 +56,21 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 									],
 								},
 								{
+									title: '标签管理',
+									children: [
+										{
+											path: '/blogBackend/TagManagement',
+											componentName: 'TagManagement',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '所有标签',
+											},
+											name: 'TagManagement',
+										},
+									],
+								},
+								{
 									title: '其他',
 									children: [],
 								},

@@ -29,11 +29,39 @@ export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string
 
 	fileRouter({ app });
 };
-
 /**
  * @swagger
  * components:
  *   schemas:
+ *     ArticleBatchUpdateTagRequest:
+ *       type: object
+ *       properties:
+ *         tag_id:
+ *           type: integer
+ *         article_ids:
+ *           type: array
+ *           items:
+ *             type: integer
+ *     QueryArticleSingleByTagIdResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: 文章id
+ *         title:
+ *           type: string
+ *           description: 文章标题
+ *         add_time:
+ *           type: string
+ *           description: 文章新增时间
+ *         user_name:
+ *           type: string
+ *           description: 作者
+ *     ArticleTagAddRequest:
+ *       type: object
+ *       properties:
+ *          id:
+ *               type: number
  *     RouterQueryResponse:
  *       type: object
  *       properties:
@@ -682,6 +710,12 @@ export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string
  *         passWord:
  *           type: string
  *           description: 加密密码
+ *         email:
+ *           type: string
+ *           description: 邮箱
+ *         isReceiveEmail:
+ *           type: integer
+ *           description: 是否接收邮件
  *     UserDeleteRequest:
  *       type: object
  *       properties:

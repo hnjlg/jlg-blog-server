@@ -22,11 +22,13 @@ export default ({ app }: { app: Application }) => {
 
 			const { pageSize, pageIndex, tagName } = req.body;
 			mysqlUTils.query<[string, number, number] | [number, number], []>(
-				`SELECT article_tags.id, article_tags.tag_name FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''} LIMIT ? OFFSET ?;`,
+				`SELECT article_tags.id, article_tags.tag_name FROM article_tags ${
+					tagName !== undefined ? 'WHERE tag_name LIKE ? AND valid = 1' : ''
+				} LIMIT ? OFFSET ?;`,
 				tagName !== undefined ? [`%${tagName}%`, pageSize, (pageIndex - 1) * pageSize] : [pageSize, (pageIndex - 1) * pageSize],
 				function (results) {
 					mysqlUTils.query<[string] | [], [{ total: number }]>(
-						`SELECT COUNT(*) AS total FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ?' : ''};`,
+						`SELECT COUNT(*) AS total FROM article_tags ${tagName !== undefined ? 'WHERE tag_name LIKE ? AND valid = 1' : ''};`,
 						tagName !== undefined ? [`%${tagName}%`] : [],
 						function (resultTotal) {
 							return res.status(200).json({

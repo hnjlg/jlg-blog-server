@@ -14,9 +14,11 @@ export default ({ app }: { app: Application }) => {
 				.withMessage('passWord cannot be empty')
 				.isLength({ min: 5, max: 32 })
 				.withMessage('passWord length must between 5 and 32'),
+			body('email').notEmpty().withMessage('email cannot be empty').isInt().withMessage('email must be string'),
+			body('isReceiveEmail').notEmpty().withMessage('isReceiveEmail cannot be empty').isInt().withMessage('isReceiveEmail must be number'),
 		],
 		(req: Request, res: Response) => {
-			const { author, passWord } = req.body;
+			const { author, passWord, email, isReceiveEmail } = req.body;
 
 			mysqlUTils.query<
 				[number],
@@ -27,9 +29,9 @@ export default ({ app }: { app: Application }) => {
 				]
 			>('SELECT COUNT(*) AS count FROM users WHERE id = ?;', [Number(author)], function (results) {
 				if (results && results[0].count > 0) {
-					mysqlUTils.query<[string, number], I_MySQLResult>(
-						`UPDATE users SET pass_word = ? where id = ?;`,
-						[passWord, Number(author)],
+					mysqlUTils.query<[string, number, string, number], I_MySQLResult>(
+						`UPDATE users SET pass_word = ? , is_receive_email = ? , email = ? where id = ?;`,
+						[passWord, isReceiveEmail, email, Number(author)],
 						function (results) {
 							return res.status(200).json({
 								status: 1,
