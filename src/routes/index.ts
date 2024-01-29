@@ -709,6 +709,12 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
  *         passWord:
  *           type: string
  *           description: 加密密码
+ *         email:
+ *           type: string
+ *           description: 邮箱
+ *         isReceiveEmail:
+ *           type: integer
+ *           description: 是否接收邮件
  *     UserDeleteRequest:
  *       type: object
  *       properties:
