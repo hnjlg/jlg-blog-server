@@ -4,9 +4,10 @@ import register from './register';
 import update from './update';
 import deleteRoute from './delete';
 import queryAll from './queryAll';
+import { T_RedisClient } from '../../global';
 
-export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
-	login({ app, jwtKey });
+export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
+	login({ app, jwtKey, redisClient });
 	register({ app });
 	update({ app });
 	deleteRoute({ app });

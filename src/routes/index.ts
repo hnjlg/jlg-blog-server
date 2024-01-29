@@ -8,13 +8,14 @@ import articleTreeRouter from './article-tree';
 import articleTagsRouter from './article-tags';
 import routerConfigRouter from './router-config';
 import fileRouter from './file';
+import { T_RedisClient } from '../global';
 
-export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
+export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
 	generateFksPageTemplateRouter({ app });
 
 	errorSdkRouter({ app });
 
-	userRouter({ app, jwtKey });
+	userRouter({ app, jwtKey, redisClient });
 
 	blogRouter({ app });
 

@@ -27,7 +27,7 @@ module.exports = {
 		'no-debugger': 'warn', // 使用debugger
 		'@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '.*', args: 'none' }], //变量声明未使用
 		'@typescript-eslint/no-explicit-any': 'warn', // ts使用any
-		'@typescript-eslint/no-var-requires': 'error', // 使用require
+		'@typescript-eslint/no-var-requires': 'off', // 使用require
 		'no-unused-vars': 'error', // 变量未使用
 	},
 	ignorePatterns: [],
