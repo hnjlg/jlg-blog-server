@@ -9,10 +9,11 @@ import swaggerConfig from './config/swagger';
 import jwtConfig from './config/jwt';
 import requestLog from './config/requestLog';
 import bodyParams from './config/bodyParams';
-import dotenv from './config/dotenv';
+import dotenvInit from './config/dotenv';
 import socketInit from './socket/index';
+import redisInit from './config/redis';
 
-dotenv();
+dotenvInit();
 
 dayjs.locale('zh-cn');
 
@@ -56,9 +57,11 @@ const port = Number(process.env.SERVER_PORT) ?? 3000;
 
 const { jwtKey } = jwtConfig({ app });
 
-routers({ app, jwtKey });
+const { redisClient } = redisInit();
 
-const server = socketInit({ app, jwtKey });
+routers({ app, jwtKey, redisClient });
+
+const server = socketInit({ app, jwtKey, redisClient });
 
 // 启动服务器
 server.listen(port, function () {

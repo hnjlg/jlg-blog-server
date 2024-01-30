@@ -1,15 +1,18 @@
 import { Application } from 'express';
 import http from 'http';
 import webSocket, { Server, Socket } from 'socket.io';
-import systemMsgSocket from './system-msg/index';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import jwt from 'jsonwebtoken';
 import mysqlUTils from '../utils/mysql';
 import { E_User_Standing } from '../types/standing';
+import { T_RedisClient } from '../global';
+import systemMsgSocket from './system-msg/index';
+import connectionMsgSocket from './connection-msg/index';
 
 export declare interface I_Option {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+	redisClient: T_RedisClient;
 	jwtKey: string;
 }
 
@@ -21,7 +24,28 @@ export const socketOption: {
 	io: null,
 };
 
-const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
+const init = ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
+	// redisClient.set('user:a', 1);
+	// console.log(redisClient.get('user:a'));
+	// redisClient.keys('user:*', (err, keys) => {
+	// 	if (err) {
+	// 		console.error('获取在线用户列表出错:', err);
+	// 		return;
+	// 	}
+	// 	console.log(keys, 'keys');
+	// });
+	// redisClient.set(`user:${userInfo.id}`, userInfo);
+	// client.keys('user:*', (err, keys) => {
+	// 	if (err) {
+	// 		console.error('获取在线用户列表出错:', err);
+	// 		return;
+	// 	}
+
+	// 	const onlineUsers = keys.map((key) => key.split(':')[1]);
+	// 	console.log('当前在线用户:', onlineUsers);
+	// });
+	// client.del(`user:${userId}`);
+
 	const server = http.createServer(app);
 
 	const io = new webSocket.Server(server);
@@ -73,7 +97,9 @@ const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 			});
 		});
 
-		systemMsgSocket({ socket, io, jwtKey });
+		systemMsgSocket({ socket, io, jwtKey, redisClient });
+
+		connectionMsgSocket({ socket, io, jwtKey, redisClient });
 
 		// setInterval(() => {
 		// 	socket.emit('resRouterChange', [

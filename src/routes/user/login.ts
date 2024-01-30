@@ -5,8 +5,9 @@ import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { I_User } from '../../types/users';
 import CryptoJS from 'crypto-js';
+import { T_RedisClient } from '../../global';
 
-export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
+export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
 	app.post(
 		'/user/login',
 		[
@@ -32,16 +33,18 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 				function (results) {
 					if (results && results.length === 1) {
 						const token = jwt.sign({ id: results[0].id }, jwtKey);
+						const userInfo = {
+							id: results[0].id,
+							user_name: results[0].user_name,
+							user_code: results[0].user_code,
+							standing: results[0].standing,
+							token,
+						};
+						redisClient.set(`user:${userInfo.id}`, JSON.stringify(userInfo));
 						res.status(200).json({
 							status: 1,
 							message: 'success',
-							content: {
-								id: results[0].id,
-								user_name: results[0].user_name,
-								user_code: results[0].user_code,
-								standing: results[0].standing,
-								token,
-							},
+							content: userInfo,
 						});
 					} else {
 						res.status(401).json({ status: 1, message: '账号或密码错误', content: null });
