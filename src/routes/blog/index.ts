@@ -7,6 +7,7 @@ import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId';
 import articleInterview from './articleInterview';
 import articleForSearchByArticleId from './articleForSearchByArticleId';
 import articleForSearchLikeTitle from './articleForSearchLikeTitle';
+import articleTreeAll from './articleTreeAll';
 
 export default ({ app }: { app: Application }) => {
 	blogHotQuery({ app });
@@ -17,4 +18,5 @@ export default ({ app }: { app: Application }) => {
 	articleInterview({ app });
 	articleForSearchByArticleId({ app });
 	articleForSearchLikeTitle({ app });
+	articleTreeAll({ app });
 };
