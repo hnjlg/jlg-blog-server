@@ -30,6 +30,7 @@ export default ({ app }: { app: Application }) => {
                 LEFT JOIN article_status ON blog_article.status = article_status.status_value 
                 WHERE blog_article.valid = 1 AND blog_article.author = ? 
                 GROUP BY blog_article.id, blog_article.title, blog_article.content, blog_article.reading_quantity, blog_article.add_time, article_status.status_name, article_status.status_value 
+				ORDER BY blog_article.add_time DESC
                 LIMIT ? OFFSET ?;`,
 				[Number(author), Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 				function (results) {

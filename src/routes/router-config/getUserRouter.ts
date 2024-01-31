@@ -83,11 +83,6 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 											},
 											name: 'CatalogManagement',
 										},
-									],
-								},
-								{
-									title: '文章树管理',
-									children: [
 										{
 											path: '/blogBackend/TreeManagement',
 											componentName: 'TreeManagement',
