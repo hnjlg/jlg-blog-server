@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 import mysqlUTils from '../../utils/mysql';
 import { I_MySQLResult } from '../../types/mysqlResult';
+import CryptoJS from 'crypto-js';
 
 export default ({ app }: { app: Application }) => {
 	app.post(
@@ -18,7 +19,9 @@ export default ({ app }: { app: Application }) => {
 			body('isReceiveEmail').notEmpty().withMessage('isReceiveEmail cannot be empty').isInt().withMessage('isReceiveEmail must be number'),
 		],
 		(req: Request, res: Response) => {
-			const { author, passWord, email, isReceiveEmail } = req.body;
+			const { author, email, isReceiveEmail } = req.body;
+
+			const passWord = CryptoJS.SHA256(CryptoJS.AES.decrypt(req.body.passWord, 'blog').toString(CryptoJS.enc.Utf8)).toString();
 
 			mysqlUTils.query<
 				[number],

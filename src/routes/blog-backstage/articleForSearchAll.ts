@@ -39,6 +39,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 								LEFT JOIN users ON blog_article.author = users.id
 								WHERE blog_article.valid = 1 AND blog_article.status IN (?)
 								GROUP BY blog_article.id 
+								ORDER BY blog_article.add_time DESC
 								LIMIT ? OFFSET ?;`,
 								[
 									[E_Article_Status['待审'], E_Article_Status['公开'], E_Article_Status['驳回']],
@@ -71,6 +72,7 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 								LEFT JOIN users ON blog_article.author = users.id 
 								WHERE blog_article.valid = 1 AND blog_article.author = ?
 								GROUP BY blog_article.id 
+								ORDER BY blog_article.add_time DESC
 								LIMIT ? OFFSET ?;`,
 								[user.id, Number(pageSize), (Number(pageIndex) - 1) * Number(pageSize)],
 								function (results) {

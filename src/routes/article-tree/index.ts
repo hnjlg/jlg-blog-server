@@ -1,10 +1,12 @@
 import { Application } from 'express';
-import searchAll from './searchAll';
 import deleteById from './deleteById';
 import searchByArticleTreeName from './searchByArticleTreeName';
+import add from './add';
+import searchById from './searchById';
 
 export default ({ app }: { app: Application }) => {
-	searchAll({ app });
 	deleteById({ app });
 	searchByArticleTreeName({ app });
+	add({ app });
+	searchById({ app });
 };

@@ -71,6 +71,31 @@ export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 									],
 								},
 								{
+									title: '目录管理',
+									children: [
+										{
+											path: '/blogBackend/CatalogManagement',
+											componentName: 'CatalogManagement',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '所有目录',
+											},
+											name: 'CatalogManagement',
+										},
+										{
+											path: '/blogBackend/TreeManagement',
+											componentName: 'TreeManagement',
+											meta: {
+												keepAlive: true,
+												systemPage: true,
+												title: '文章树',
+											},
+											name: 'TreeManagement',
+										},
+									],
+								},
+								{
 									title: '其他',
 									children: [],
 								},
