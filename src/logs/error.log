@@ -9,3 +9,15 @@ Error: Unknown column 'tagName' in 'where clause'
 Error: Unknown column 'tagName' in 'where clause'
 Error: Unknown column 'tagName' in 'where clause'
 Error: Unknown column 'tagName' in 'where clause'
+Error: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'express_test.article_status.status_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Error: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'express_test.article_status.status_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Error: Unknown column 'valid' in 'where clause'
+Error: Unknown column 'valid' in 'where clause'
+Error: Unknown column 'valid' in 'where clause'
+Error: Unknown column 'valid' in 'where clause'
+Error: Unknown column 'valid' in 'where clause'
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''%%' OFFSET 30' at line 1
+Error: Unknown column 'valid' in 'where clause'
+Error: Unknown column 'valid' in 'where clause'
+Error: Unknown column 'article_tags.valid' in 'where clause'
+Error: Unknown column 'article_tags.valid' in 'where clause'

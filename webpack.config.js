@@ -1,7 +1,7 @@
 const path = require('path');
 
 // 打包先清理dist
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.ts', // 入口文件
