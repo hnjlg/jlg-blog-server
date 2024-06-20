@@ -11,7 +11,7 @@ import requestLog from './config/requestLog';
 import bodyParams from './config/bodyParams';
 import dotenvInit from './config/dotenv';
 import socketInit from './socket/index';
-import redisInit from './config/redis';
+// import redisInit from './config/redis';
 
 dotenvInit();
 
@@ -57,11 +57,13 @@ const port = Number(process.env.SERVER_PORT) ?? 3000;
 
 const { jwtKey } = jwtConfig({ app });
 
-const { redisClient } = redisInit();
+// const { redisClient } = redisInit();
 
-routers({ app, jwtKey, redisClient });
+// routers({ app, jwtKey, redisClient });
+routers({ app, jwtKey });
 
-const server = socketInit({ app, jwtKey, redisClient });
+// const server = socketInit({ app, jwtKey, redisClient });
+const server = socketInit({ app, jwtKey });
 
 // 启动服务器
 server.listen(port, function () {

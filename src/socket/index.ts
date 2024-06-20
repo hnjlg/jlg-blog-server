@@ -6,8 +6,8 @@ import jwt from 'jsonwebtoken';
 import mysqlUTils from '../utils/mysql';
 import { E_User_Standing } from '../types/standing';
 import { T_RedisClient } from '../global';
-import systemMsgSocket from './system-msg/index';
-import connectionMsgSocket from './connection-msg/index';
+// import systemMsgSocket from './system-msg/index';
+// import connectionMsgSocket from './connection-msg/index';
 
 export declare interface I_Option {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
@@ -24,7 +24,8 @@ export const socketOption: {
 	io: null,
 };
 
-const init = ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
+// const init = ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
+const init = ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	// redisClient.set('user:a', 1);
 	// console.log(redisClient.get('user:a'));
 	// redisClient.keys('user:*', (err, keys) => {
@@ -97,9 +98,9 @@ const init = ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; 
 			});
 		});
 
-		systemMsgSocket({ socket, io, jwtKey, redisClient });
+		// systemMsgSocket({ socket, io, jwtKey, redisClient });
 
-		connectionMsgSocket({ socket, io, jwtKey, redisClient });
+		// connectionMsgSocket({ socket, io, jwtKey, redisClient });
 
 		// setInterval(() => {
 		// 	socket.emit('resRouterChange', [

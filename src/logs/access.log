@@ -38606,3 +38606,30 @@
 	body:{}
 	status:200
 }
+{
+	id:cd44b4623f1f726f77cfbc8d6351afa6e9d460fff815a8b574d571181b2b50cb
+	date:2024/06/20-14:42:28
+	method:GET
+	url:/sentry-sdk/add-error
+	query:{}
+	body:{}
+	status:404
+}
+{
+	id:58203b12ad1720925e2a4df38d7628b1f73e6062a7b423e77a62641bd31cc151
+	date:2024/06/20-14:43:10
+	method:GET
+	url:/sentry-sdk/add-error
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:08aa77e514bdb3acb49b8fc7e40f3ef607f4fdfa111194e428f3d2c28a68b9fb
+	date:2024/06/20-14:43:10
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}

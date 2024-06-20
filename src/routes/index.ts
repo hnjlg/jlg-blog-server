@@ -1,21 +1,23 @@
 import { Application } from 'express';
 import errorSdkRouter from './err-sdk';
 import generateFksPageTemplateRouter from './generate-fks-page-template';
-import userRouter from './user';
+// import userRouter from './user';
 import blogRouter from './blog';
 import blogBackstage from './blog-backstage';
 import articleTreeRouter from './article-tree';
 import articleTagsRouter from './article-tags';
 import routerConfigRouter from './router-config';
 import fileRouter from './file';
-import { T_RedisClient } from '../global';
+import sentrySdkRouter from './sentry-sdk';
+// import { T_RedisClient } from '../global';
 
-export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
+// export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {
+export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	generateFksPageTemplateRouter({ app });
 
 	errorSdkRouter({ app });
 
-	userRouter({ app, jwtKey, redisClient });
+	// userRouter({ app, jwtKey, redisClient });
 
 	blogRouter({ app });
 
@@ -28,6 +30,8 @@ export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string
 	routerConfigRouter({ app, jwtKey });
 
 	fileRouter({ app });
+
+	sentrySdkRouter({ app });
 };
 /**
  * @swagger

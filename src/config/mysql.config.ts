@@ -11,5 +11,5 @@ export default process.env.NODE_ENV === 'development'
 			user: 'root', // mysql用户名称
 			password: 'Mcw-1340739521', // mysql用户密码
 			port: 3306, // 端口
-			database: 'jlg-blog-server', // 数据库名称
+			database: 'express-server', // 数据库名称
 	  };
