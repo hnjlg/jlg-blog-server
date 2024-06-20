@@ -38633,3 +38633,174 @@
 	body:{}
 	status:401
 }
+{
+	id:f1d986ba3379094d11e0d7f14c12074f357108349d739e3db7abcf04f84a5290
+	date:2024/06/20-16:57:05
+	method:GET
+	url:/api/error?a=1
+	query:{"a":"1"}
+	body:{}
+	status:401
+}
+{
+	id:11aa3598480f109dbd5e11ea56f8b44b435b01e8c5dc3411ca75ae9be6f83ff3
+	date:2024/06/20-16:58:52
+	method:GET
+	url:/api/error
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:ee441bd35f5dc814dccda3025d8d68389f7c07412068c74bfceb352f225085dc
+	date:2024/06/20-16:59:04
+	method:GET
+	url:/api/error
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:826ae1ad4fd302f0a42eecd4b7fca06959f378556fc35aad02455741995de410
+	date:2024/06/20-17:45:23
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:286cf2f702affa28e9c0a75671c2b5a08523a87eb48776371a17e854da968829
+	date:2024/06/20-17:45:24
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:e0659c9046a1b08f245ec5d8f0e0841af459712cf130cab46ca77868afc11229
+	date:2024/06/20-17:50:17
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:304
+}
+{
+	id:ed714868232c35c33421d694f8cba0f1d6cb8eb96ba196b103884931af73769f
+	date:2024/06/20-17:50:17
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:757ba1b0eb384e2548b10124432870c551eb1a3384f26003fb4af5b3e972b622
+	date:2024/06/20-17:56:43
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:13e7c57b9ac98350bf5597205c3140211d29b4f2d62f7162dd5d375fe236c4e7
+	date:2024/06/20-17:57:53
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:871fc4b7c317f86cfddfd4638d1f9b265d8665fbd56c97206783d9ded9c7060e
+	date:2024/06/20-17:57:53
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:019ac7aeb3d13af5334e6d542906273d5989499a51fd9afe34d2af36fbc6623e
+	date:2024/06/20-22:06:37
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:1bf704893161761edf60a13c6d40f4f9efc812be68334134087c0b3bfe9eb4a3
+	date:2024/06/20-22:06:37
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:6c196db8bf8d464cd3e48c4a68105bf1d19d53646bdb535991e4fe87db52b73c
+	date:2024/06/20-22:07:14
+	method:GET
+	url:/swagger.json
+	query:{}
+	body:{}
+	status:200
+}
+{
+	id:678c97b65a77a621b2998bf9d495a03ce9d0b7413467bd316b1d50fcc1304cfb
+	date:2024/06/20-22:07:14
+	method:GET
+	url:/favicon.ico
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:38b2969595d4c1416fd3abeee96ec9972408933e005bd46fa95522e9dc88ee07
+	date:2024/06/20-22:12:37
+	method:GET
+	url:/api/error?a=1
+	query:{"a":"1"}
+	body:{}
+	status:401
+}
+{
+	id:5f757b947338acfec760d72ebf06606f17b01a23c6d8c2668d0abd28220a23f7
+	date:2024/06/20-22:12:37
+	method:GET
+	url:/api/error
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:601b78c794ab0f296a7c9e0a729d0346b850057948cfade47c5c41cf410078cf
+	date:2024/06/20-22:12:41
+	method:GET
+	url:/api/error
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:08512074a912cb630891437aba4651ab0638d24ef5c9a4978dd31165497aee0b
+	date:2024/06/20-22:12:43
+	method:GET
+	url:/api/error
+	query:{}
+	body:{}
+	status:401
+}
+{
+	id:67551a29f6e8f37d4b30f2b84f71818811a010f99c5457a1b66babcbb1b82639
+	date:2024/06/20-22:12:43
+	method:GET
+	url:/api/error?a=1
+	query:{"a":"1"}
+	body:{}
+	status:401
+}
