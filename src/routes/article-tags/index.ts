@@ -1,9 +1,9 @@
 import { Application } from 'express';
-import articleTagsQuery from './articleTagsQuery';
-import articleTagsAdd from './articleTagsAdd';
-import articleTagsDelete from './articleTagsDelete';
-import articleTagsQuerySingle from './articleTagsQuerySingle';
-import articleTagsUpdate from './articleTagsUpdate';
+import articleTagsQuery from './articleTagsQuery/articleTagsQuery';
+import articleTagsAdd from './articleTagsAdd/articleTagsAdd';
+import articleTagsDelete from './articleTagsDelete/articleTagsDelete';
+import articleTagsQuerySingle from './articleTagsQuerySingle/articleTagsQuerySingle';
+import articleTagsUpdate from './articleTagsUpdate/articleTagsUpdate';
 
 export default ({ app }: { app: Application }) => {
 	articleTagsQuery({ app });

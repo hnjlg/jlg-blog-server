@@ -1,0 +1,30 @@
+/blog-backstage/article/add:
+  post:
+    tags: ['blog-backstage']
+    summary: 新增博客文章
+    description: |
+      新增一篇待审的文章
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BlogBackstageArticleAddRequest'
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MySQLResult'

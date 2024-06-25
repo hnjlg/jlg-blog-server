@@ -20,6 +20,10 @@ module.exports = {
 				use: 'ts-loader', // 使用 ts-loader 来处理 .ts 文件
 				exclude: /node_modules/, // 排除 node_modules 目录
 			},
+			{
+				test: /\.yaml$/,
+				use: 'yaml-loader',
+			},
 		],
 	},
 	plugins: [new CleanWebpackPlugin()],

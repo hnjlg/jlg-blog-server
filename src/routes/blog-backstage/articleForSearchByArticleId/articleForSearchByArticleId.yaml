@@ -1,0 +1,28 @@
+/blog-backstage/article/query/for/articleId:
+  post:
+    tags: ['blog-backstage']
+    summary: 获取文章详情通过文章id
+    description: |
+      获取文章详情
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BlogBackstageArticleQueryForArticleRequest'
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  $ref: '#/components/schemas/BlogBackstageArticleQueryForArticleResponse'

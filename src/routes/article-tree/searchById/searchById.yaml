@@ -1,0 +1,34 @@
+/article-tree/article-tree-id/query:
+  post:
+    tags: ['article-tree']
+    summary: 根据文章树id搜索文章树子节点
+    description: |
+      根据文章树id搜索文章树子节点
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              articleTreeId:
+                type: integer
+                description: 文章树id
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ArticleTreeArticleTreeNameQueryResponse'

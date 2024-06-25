@@ -1,0 +1,40 @@
+/article-tree/article-tree-id/update:
+  post:
+    tags: ['article-tree']
+    summary: 编辑文章树
+    description: |
+      编辑文章树
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: 文章树id
+              article_tree_name:
+                type: string
+                description: 文章树名称
+              parent_article_tree_id:
+                type: integer
+                description: 父级文章树id
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MySQLResult'

@@ -1,0 +1,36 @@
+/article-tags/tags/query:
+  post:
+    tags: ['article-tags']
+    summary: 后台获取所有文章标签
+    description: |
+      获取所有文章标签，并可根据参数分页查询。
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ArticleTagsTagsQueryRequest'
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                      description: 数据量
+                    arr:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ArticleTagsTagsQueryResponse'

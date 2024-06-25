@@ -1,18 +1,18 @@
 import { Application } from 'express';
-import articleSubmittedForWaitReview from './articleSubmittedForWaitReview';
-import articleSubmittedForDraft from './articleSubmittedForDraft';
-import articleSubmittedForReview from './articleSubmittedForReview';
-import articleSubmittedForReject from './articleSubmittedForReject';
-import articleSubmittedForTakeback from './articleSubmittedForTakeback';
-import articleSubmittedForDelete from './articleSubmittedForDelete';
-import articleForSearchAll from './articleForSearchAll';
-import articleForSearchByUserID from './articleForSearchByUserID';
-import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId';
-import articleForSearchByArticleId from './articleForSearchByArticleId';
-import articleSubmittedForEdit from './articleSubmittedForEdit';
-import articleStatusForSearchAll from './articleStatusForSearchAll';
-import articleSubmittedForDraftTurnWaitReview from './articleSubmittedForDraftTurnWaitReview';
-import articleTagsBatchUpdate from './articleTagsBatchUpdate';
+import articleSubmittedForWaitReview from './articleSubmittedForWaitReview/articleSubmittedForWaitReview';
+import articleSubmittedForDraft from './articleSubmittedForDraft/articleSubmittedForDraft';
+import articleSubmittedForReview from './articleSubmittedForReview/articleSubmittedForReview';
+import articleSubmittedForReject from './articleSubmittedForReject/articleSubmittedForReject';
+import articleSubmittedForTakeback from './articleSubmittedForTakeback/articleSubmittedForTakeback';
+import articleSubmittedForDelete from './articleSubmittedForDelete/articleSubmittedForDelete';
+import articleForSearchAll from './articleForSearchAll/articleForSearchAll';
+import articleForSearchByUserID from './articleForSearchByUserID/articleForSearchByUserID';
+import articleForSearchByArticleTreeId from './articleForSearchByArticleTreeId/articleForSearchByArticleTreeId';
+import articleForSearchByArticleId from './articleForSearchByArticleId/articleForSearchByArticleId';
+import articleSubmittedForEdit from './articleSubmittedForEdit/articleSubmittedForEdit';
+import articleStatusForSearchAll from './articleStatusForSearchAll/articleStatusForSearchAll';
+import articleSubmittedForDraftTurnWaitReview from './articleSubmittedForDraftTurnWaitReview/articleSubmittedForDraftTurnWaitReview';
+import articleTagsBatchUpdate from './articleTagsBatchUpdate/articleTagsBatchUpdate';
 
 export default ({ app, jwtKey }: { app: Application; jwtKey: string }) => {
 	articleSubmittedForDraft({ app, jwtKey });

@@ -1,0 +1,35 @@
+/article-tags/tags/update:
+  post:
+    tags: ['article-tags']
+    summary: 编辑文章标签
+    description: |
+      编辑文章标签
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tag_id:
+                type: integer
+              tag_name:
+                type: string
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MySQLResult'

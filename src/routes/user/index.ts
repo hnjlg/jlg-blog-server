@@ -1,9 +1,9 @@
 import { Application } from 'express';
-import login from './login';
-import register from './register';
-import update from './update';
-import deleteRoute from './delete';
-import queryAll from './queryAll';
+import login from './login/login';
+import register from './register/register';
+import update from './update/update';
+import deleteRoute from './delete/delete';
+import queryAll from './queryAll/queryAll';
 import { T_RedisClient } from '../../global';
 
 export default ({ app, jwtKey, redisClient }: { app: Application; jwtKey: string; redisClient: T_RedisClient }) => {

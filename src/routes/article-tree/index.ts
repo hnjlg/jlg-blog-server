@@ -1,9 +1,9 @@
 import { Application } from 'express';
-import deleteById from './deleteById';
-import searchByArticleTreeName from './searchByArticleTreeName';
-import add from './add';
-import searchById from './searchById';
-import updateById from './updateById';
+import deleteById from './deleteById/deleteById';
+import searchByArticleTreeName from './searchByArticleTreeName/searchByArticleTreeName';
+import add from './add/add';
+import searchById from './searchById/searchById';
+import updateById from './updateById/updateById';
 
 export default ({ app }: { app: Application }) => {
 	deleteById({ app });

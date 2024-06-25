@@ -1,0 +1,31 @@
+/article-tags/tags/queryArticleSingleByTagId:
+  get:
+    tags: ['article-tags']
+    summary: 根据标签id查找只有该标签的文章
+    description: |
+      根据标签id查找只有该标签的文章
+    parameters:
+      - in: query
+        name: tag_id
+        schema:
+          type: integer
+        required: true
+        description: 文章标签id
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 1表示成功，2表示失败
+                message:
+                  type: string
+                  description: success表示成功，failed表示失败
+                content:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/QueryArticleSingleByTagIdResponse'

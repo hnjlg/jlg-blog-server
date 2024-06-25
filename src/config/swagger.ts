@@ -39,7 +39,7 @@ export default ({ app }: { app: Application }) => {
 				},
 			],
 		},
-		apis: [path.join(process.cwd(), './src/routes/**/*.ts')], // 指定包含路由定义的文件路径
+		apis: [path.join(process.cwd(), './src/routes/**/*.yaml')], // 指定包含路由定义的文件路径
 	};
 
 	const swaggerSpec = swaggerJsdoc(swaggerOptions);
